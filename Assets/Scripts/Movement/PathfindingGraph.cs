@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // Graph that is overlaid ontop of the level geometry.
@@ -71,6 +72,101 @@ public class PathfindingGraph : MonoBehaviour
                 }
             }
         }
+    }
+
+    // Return the position of the closest graph node to the given position.
+    Vector2 ClosestNode(Vector2 position)
+    {
+        float x = 0, y = 0;
+        for (float i = start.x; x <= end.x; i += nodeDistance)
+        {
+            if (Mathf.Abs(position.x - i) <= nodeDistance / 2)
+            {
+                x = i;
+                break;
+            }
+        }
+        for (float j = start.y; y <= end.y; j += nodeDistance)
+        {
+            if (Mathf.Abs(position.y - j) <= nodeDistance / 2)
+            {
+                y = j;
+                break;
+            }
+        }
+        return new Vector2(x, y);
+    }
+
+    // Heuristic to use by the A* pathfinding algorithm.
+    // Returns the Euclidean distance between the position and the target.
+    float Heuristic(Vector2 position, Vector2 target)
+    {
+        return Vector2.Distance(position, target);
+    }
+
+    // Compute and return the shortest path from the position to the target.
+    // This is an implementation of the A* pathfinding algorithm.
+    // It uses the Euclidean distance as the heuristic.
+    List<Vector2> ComputePath(Vector2 position, Vector2 target)
+    {
+        // Setup required data structures
+        HashSet<Vector2> closed = new HashSet<Vector2>();
+        HashSet<Vector2> open = new HashSet<Vector2>();
+        Dictionary<Vector2, Vector2> connections = new Dictionary<Vector2, Vector2>();
+        Dictionary<Vector2, float> costSoFar = new Dictionary<Vector2, float>();
+        Dictionary<Vector2, float> estimatedTotalCost = new Dictionary<Vector2, float>();
+        Vector2 startNode = ClosestNode(position);
+        Vector2 endNode = ClosestNode(target);
+        open.Add(startNode);
+        costSoFar.Add(startNode, 0);
+        estimatedTotalCost.Add(startNode, Heuristic(startNode, endNode));
+
+        // Perform traversal through graph
+        Vector2 current = startNode;
+        while (open.Count > 0)
+        {
+            // Select which node to process next
+            current = open.First();
+            foreach (Vector2 node in open)
+            {
+                if (estimatedTotalCost[node] < estimatedTotalCost[current])
+                {
+                    current = node;
+                }
+            }
+
+            // Visit accessible connected nodes
+            foreach (Vector2 neighbor in edges[current].Keys)
+            {
+                if (closed.Contains(neighbor))
+                {
+                    continue;
+                }
+                float cost = costSoFar[current] + edges[current][neighbor];
+                if (!open.Contains(neighbor))
+                {
+                    open.Add(neighbor);
+                }
+                else if (cost >= costSoFar[neighbor])
+                {
+                    continue;
+                }
+                connections[neighbor] = current;
+                costSoFar[neighbor] = cost;
+                estimatedTotalCost[neighbor] = cost + Heuristic(neighbor, endNode);
+            }
+        }
+
+        // Retrieve path
+        List<Vector2> path = new List<Vector2>{endNode, target};
+        Vector2 pathNode = endNode;
+        while (pathNode != startNode)
+        {
+            pathNode = connections[pathNode];
+            path.Insert(0, pathNode);
+        }
+
+        return path;
     }
 
     // Draw the pathfinding graph nodes and edges in the scene if the gizmo is enabled.
