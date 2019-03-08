@@ -128,9 +128,9 @@ GameObject:
   m_Component:
   - component: {fileID: 56157331}
   - component: {fileID: 56157332}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Level
-  m_TagString: Untagged
+  m_TagString: Level
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 63622729}
   - component: {fileID: 63622728}
   - component: {fileID: 63622727}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,6 +275,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blue Base - Top Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -360,6 +365,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bottom Point - Right Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -439,6 +449,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Top Point - Center Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
@@ -589,6 +604,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Red Base
       objectReference: {fileID: 0}
+    - target: {fileID: 1101211344379430340, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1101211344379430336, guid: 62dddad955a5b027ea4eb2c533ca389b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -669,7 +689,7 @@ GameObject:
   - component: {fileID: 203108038}
   - component: {fileID: 203108037}
   - component: {fileID: 203108036}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,6 +780,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Top Capture Point
       objectReference: {fileID: 0}
+    - target: {fileID: 3631996289852408758, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3631996289852408757, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -843,6 +868,14 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
       propertyPath: m_Name
       value: Bottom Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
       propertyPath: m_LocalPosition.x
@@ -944,7 +977,7 @@ GameObject:
   - component: {fileID: 303464171}
   - component: {fileID: 303464170}
   - component: {fileID: 303464169}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1035,6 +1068,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Left Capture Point
       objectReference: {fileID: 0}
+    - target: {fileID: 3631996289852408758, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3631996289852408757, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1120,6 +1158,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blue Base - Left Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1199,6 +1242,7 @@ GameObject:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
+  - component: {fileID: 534669906}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1263,13 +1307,27 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.6427876, y: 0, z: 0, w: 0.7660445}
-  m_LocalPosition: {x: 0, y: 20, z: -5}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 20, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 80, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &534669906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0d92842446d9a2ccb32a098b152b711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  speed: 3
 --- !u!1 &547774399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,7 +1340,7 @@ GameObject:
   - component: {fileID: 547774403}
   - component: {fileID: 547774402}
   - component: {fileID: 547774401}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1379,6 +1437,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Red Base - Top Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1464,6 +1527,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bottom Capture Point
       objectReference: {fileID: 0}
+    - target: {fileID: 3631996289852408758, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3631996289852408757, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1546,7 +1614,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 852352579}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Obstacles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1584,7 +1652,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 865180347}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1625,7 +1693,7 @@ GameObject:
   - component: {fileID: 877896688}
   - component: {fileID: 877896687}
   - component: {fileID: 877896686}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1717,7 +1785,7 @@ GameObject:
   - component: {fileID: 955093323}
   - component: {fileID: 955093322}
   - component: {fileID: 955093321}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1808,6 +1876,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bottom Point - Center Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1886,6 +1959,14 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
       propertyPath: m_Name
       value: Top Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1987,6 +2068,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Right Capture Point
       objectReference: {fileID: 0}
+    - target: {fileID: 3631996289852408758, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3631996289852408757, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2069,7 +2155,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1146902350}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Pathways
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2116,7 +2202,7 @@ GameObject:
   - component: {fileID: 1201952792}
   - component: {fileID: 1201952791}
   - component: {fileID: 1201952790}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2264,6 +2350,127 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7f6dba7be4fe63409ea65979ba53819, type: 3}
+--- !u!1 &1242741820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1242741825}
+  - component: {fileID: 1242741824}
+  - component: {fileID: 1242741823}
+  - component: {fileID: 1242741822}
+  - component: {fileID: 1242741826}
+  - component: {fileID: 1242741821}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1242741821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242741820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4714a9bfb3f1c110788c70ed19ba76ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &1242741822
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242741820}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1242741823
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242741820}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1242741824
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242741820}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1242741825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242741820}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1242741826
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242741820}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!1001 &1277571535
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2275,6 +2482,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Red Base - Bottom Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
@@ -2361,6 +2573,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Red Base - Right Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2441,7 +2658,7 @@ GameObject:
   - component: {fileID: 1423036687}
   - component: {fileID: 1423036686}
   - component: {fileID: 1423036685}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2532,6 +2749,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Top Point - Right Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2609,7 +2831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1474781905}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bases
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2643,6 +2865,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Left Point - Center Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
@@ -2724,7 +2951,7 @@ GameObject:
   - component: {fileID: 1562710174}
   - component: {fileID: 1562710173}
   - component: {fileID: 1562710172}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2815,6 +3042,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Right Point - Center Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2894,6 +3126,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Left Point - Top Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
@@ -2975,7 +3212,7 @@ GameObject:
   - component: {fileID: 1745453566}
   - component: {fileID: 1745453565}
   - component: {fileID: 1745453564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3066,6 +3303,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blue Base - Bottom Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3151,6 +3393,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Left Point - Bottom Point
       objectReference: {fileID: 0}
+    - target: {fileID: 6148814502033216068, guid: b2551be7b1f3d80f8bb47f741ac9a499,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6148814502033216069, guid: b2551be7b1f3d80f8bb47f741ac9a499,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3229,6 +3476,14 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
       propertyPath: m_Name
       value: Top Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3398,6 +3653,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bottom Right
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
       propertyPath: m_LocalPosition.x
       value: 51
@@ -3498,7 +3761,7 @@ GameObject:
   - component: {fileID: 1957820818}
   - component: {fileID: 1957820817}
   - component: {fileID: 1957820816}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3586,7 +3849,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2046287283}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Capture Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3624,7 +3887,7 @@ GameObject:
   - component: {fileID: 2079959311}
   - component: {fileID: 2079959310}
   - component: {fileID: 2079959309}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3715,7 +3978,7 @@ GameObject:
   - component: {fileID: 2080917277}
   - component: {fileID: 2080917276}
   - component: {fileID: 2080917275}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3875,6 +4138,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blue Base
       objectReference: {fileID: 0}
+    - target: {fileID: 1101211344379430340, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1101211344379430336, guid: 62dddad955a5b027ea4eb2c533ca389b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3943,6 +4211,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Center Capture Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 3631996289852408758, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3631996289852408757, guid: 581007c5b34c80e96a3aaa1268ba8c5f,
         type: 3}

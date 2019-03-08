@@ -11,8 +11,8 @@ public class PathfindingGraph : MonoBehaviour
     [SerializeField] Vector2 start = Vector2.zero; // coordinates of the start corner of the graph
     [SerializeField] Vector2 end = Vector2.zero; // coordinates of the end corner of the graph
     [SerializeField] float nodeDistance = 1.0f; // distance at which nodes are placed
-    [SerializeField] float nodeWidth = 1.0f; // clearance width required for placing a node
-    [SerializeField] float graphHeight = 0.0f; // height at which the graph performs physics checks
+    [SerializeField] internal float nodeWidth = 1.0f; // clearance width required for placing a node
+    [SerializeField] internal float graphHeight = 0.0f; // height at which the graph performs checks
 
     // set of graph nodes
     HashSet<Vector2> nodes
@@ -21,12 +21,20 @@ public class PathfindingGraph : MonoBehaviour
     // dictionary of node edges and costs
     // format: Dictionary<fromNode, Dictionary<toNode, edgeCost>>
     Dictionary<Vector2, Dictionary<Vector2, float>> edges
-        = new Dictionary<Vector2, Dictionary<Vector2, float>>(); 
+        = new Dictionary<Vector2, Dictionary<Vector2, float>>();
 
-    // Initialize the graph.
-    // Automatically generate the nodes and edges between them using physics checks to detect
-    // obstacles.
+    int levelLayerMask; // layer mask which contains the static level geometry
+
+    // Initialize the pathfinding graph.
     void Start()
+    {
+        levelLayerMask = LayerMask.GetMask("Level");
+        CreateGraph();
+    }
+
+    // Create the pathfinding graph.
+    // Nodes and edges are generated automatically using physics checks to detect obstacles.
+    void CreateGraph()
     {
         // Create the nodes
         for (float x = start.x; x <= end.x; x += nodeDistance)
@@ -36,7 +44,7 @@ public class PathfindingGraph : MonoBehaviour
                 if (!Physics.CheckSphere(
                     new Vector3(x, graphHeight + nodeWidth, y),
                     nodeWidth,
-                    layerMask: Physics.DefaultRaycastLayers,
+                    layerMask: levelLayerMask,
                     queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
                 ))
                 {
@@ -62,7 +70,7 @@ public class PathfindingGraph : MonoBehaviour
                     new Vector3(node.x, graphHeight + nodeWidth, node.y),
                     new Vector3(neighbor.x, graphHeight + nodeWidth, neighbor.y),
                     nodeWidth,
-                    layerMask: Physics.DefaultRaycastLayers,
+                    layerMask: levelLayerMask,
                     queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
                 ))
                 {
@@ -77,6 +85,7 @@ public class PathfindingGraph : MonoBehaviour
     // Return the position of the closest graph node to the given position.
     Vector2 ClosestNode(Vector2 position)
     {
+        // Find mathematical closest node
         float x = 0, y = 0;
         for (float i = start.x; x <= end.x; i += nodeDistance)
         {
@@ -94,7 +103,23 @@ public class PathfindingGraph : MonoBehaviour
                 break;
             }
         }
-        return new Vector2(x, y);
+        Vector2 closest = new Vector2(x, y);
+        if (nodes.Contains(closest))
+        {
+            return new Vector2(x, y);
+        }
+
+        // Find actual closest node if theoretical closest node doesn't exist
+        // Should happen rarely, only close to obstacles
+        closest = nodes.First();
+        foreach (Vector2 node in nodes)
+        {
+            if (Vector2.Distance(node, position) < Vector2.Distance(closest, position))
+            {
+                closest = node;
+            }
+        }
+        return closest;
     }
 
     // Heuristic to use by the A* pathfinding algorithm.
@@ -107,16 +132,27 @@ public class PathfindingGraph : MonoBehaviour
     // Compute and return the shortest path from the position to the target.
     // This is an implementation of the A* pathfinding algorithm.
     // It uses the Euclidean distance as the heuristic.
-    List<Vector2> ComputePath(Vector2 position, Vector2 target)
+    public List<Vector2> ComputePath(Vector2 position, Vector2 target)
     {
+        // Check target validity
+        if (Physics.CheckSphere(
+            new Vector3(target.x, graphHeight + nodeWidth, target.y),
+            nodeWidth / 2,
+            layerMask: Physics.DefaultRaycastLayers,
+            queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
+        ))
+        {
+            return null;
+        }
+
         // Setup required data structures
         HashSet<Vector2> closed = new HashSet<Vector2>();
         HashSet<Vector2> open = new HashSet<Vector2>();
         Dictionary<Vector2, Vector2> connections = new Dictionary<Vector2, Vector2>();
         Dictionary<Vector2, float> costSoFar = new Dictionary<Vector2, float>();
         Dictionary<Vector2, float> estimatedTotalCost = new Dictionary<Vector2, float>();
-        Vector2 startNode = ClosestNode(position);
-        Vector2 endNode = ClosestNode(target);
+        Vector2 startNode = nodes.Contains(position)? position : ClosestNode(position);
+        Vector2 endNode = nodes.Contains(target)? target : ClosestNode(target);
         open.Add(startNode);
         costSoFar.Add(startNode, 0);
         estimatedTotalCost.Add(startNode, Heuristic(startNode, endNode));
@@ -134,6 +170,12 @@ public class PathfindingGraph : MonoBehaviour
                     current = node;
                 }
             }
+            if (current == endNode)
+            {
+                break;
+            }
+            open.Remove(current);
+            closed.Add(current);
 
             // Visit accessible connected nodes
             foreach (Vector2 neighbor in edges[current].Keys)
