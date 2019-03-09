@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody))]
 // Agent that performs pathfinding to move across the level.
 public class PathfindingAgent : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class PathfindingAgent : MonoBehaviour
     PathfindingGraph graph; // pathfinding graph of the level
     new Rigidbody rigidbody; // rigidbody of the agent
     new Collider collider; // collider of the agent
+    Animator animator;
     
     Vector3 velocity; // velocity of the agent
     IEnumerator movement; // coroutine of the movement
@@ -26,6 +29,7 @@ public class PathfindingAgent : MonoBehaviour
         graph = GameObject.FindWithTag("Level").GetComponent<PathfindingGraph>();
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
+        animator = GetComponent<Animator>();
     }
 
     // Make the agent move toward the target position following the shortest path possible.
@@ -124,6 +128,7 @@ public class PathfindingAgent : MonoBehaviour
             {
                 yield break;
             }
+            animator.SetFloat("speed", velocity.magnitude);
             rigidbody.MovePosition(rigidbody.position + velocity * Time.deltaTime);
 
             yield return new WaitForFixedUpdate();
