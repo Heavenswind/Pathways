@@ -137,7 +137,7 @@ public class PathfindingGraph : MonoBehaviour
         // Check target validity
         if (Physics.CheckSphere(
             new Vector3(target.x, graphHeight + nodeWidth, target.y),
-            nodeWidth / 2,
+            nodeWidth,
             layerMask: Physics.DefaultRaycastLayers,
             queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
         ))

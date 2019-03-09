@@ -8,9 +8,9 @@ using UnityEngine;
 // Agent that performs pathfinding to move across the level.
 public class PathfindingAgent : MonoBehaviour
 {
-    static float maxLinearVelocity = 3.0f;
+    public float maxLinearVelocity = 3.0f;
+    
     static float maxAngularVelocity = 7.5f;
-
     static float threshold = 0.1f;
     static float satisfactionRadius = 1.0f;
     static float timeToTarget = 0.25f;
@@ -45,6 +45,13 @@ public class PathfindingAgent : MonoBehaviour
         StartCoroutine(movement);
     }
 
+    // Make the agent stop its movement.
+    public void Stop()
+    {
+        velocity = Vector3.zero;
+        animator.SetFloat("speed", velocity.magnitude);
+    }
+
     // Make the agent follow the given path.
     // The path is smoothed during the process.
     IEnumerator FollowPath(List<Vector2> path)
@@ -52,35 +59,15 @@ public class PathfindingAgent : MonoBehaviour
         if (path == null)
         {
             Debug.LogError("Cannot path to an obstructed target");
+            Stop();
             yield break;
         }
 
         int targetIndex = 0;
         while (true)
-        {
-            // Re-path if there is an obstacle in the way
-            collider.enabled = false;
-            if (Physics.CheckCapsule(
-                new Vector3(
-                    rigidbody.position.x,
-                    graph.graphHeight + graph.nodeWidth,
-                    rigidbody.position.z
-                ),
-                new Vector3(
-                    path[targetIndex].x,
-                    graph.graphHeight + graph.nodeWidth,
-                    path[targetIndex].y
-                ),
-                graph.nodeWidth,
-                layerMask: Physics.DefaultRaycastLayers,
-                queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
-            ))
-            {
-                StopCoroutine(movement);
-                MoveTo(path.Last());
-            }
-            
+        {            
             // Path smoothing
+            collider.enabled = false;
             for (int i = targetIndex + 1; i < path.Count; ++i)
             {
                 if (!Physics.CheckCapsule(
@@ -115,22 +102,35 @@ public class PathfindingAgent : MonoBehaviour
 
             // Move forward
             float distance = (targetPosition - rigidbody.transform.position).magnitude;
-            if (targetIndex < path.Count - 1 || distance > satisfactionRadius)
+            if (targetIndex < path.Count - 1)
             {
                 velocity = transform.forward * maxLinearVelocity;
             }
-            else if (distance > threshold)
-            {
-                velocity = transform.forward
-                    * Mathf.Min(maxLinearVelocity, distance / timeToTarget);
-            }
             else
             {
-                yield break;
+                if (distance > satisfactionRadius)
+                {
+                    velocity = transform.forward * maxLinearVelocity;
+                }
+                else if (distance > threshold)
+                {
+                    velocity = transform.forward
+                        * Mathf.Min(maxLinearVelocity, distance / timeToTarget);
+                }
+                else
+                {
+                    Stop();
+                    yield break;
+                }
             }
-            animator.SetFloat("speed", velocity.magnitude);
             rigidbody.MovePosition(rigidbody.position + velocity * Time.deltaTime);
-
+            distance = (targetPosition - rigidbody.transform.position).magnitude;
+            if (targetIndex < path.Count - 1 && distance < threshold)
+            {
+                targetIndex += 1;
+            }
+            
+            animator.SetFloat("speed", velocity.magnitude);
             yield return new WaitForFixedUpdate();
         }
     }
