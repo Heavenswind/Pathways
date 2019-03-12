@@ -8,8 +8,6 @@ using UnityEngine;
 // It is used to perform agent pathfinding through the level.
 public class PathfindingGraph : MonoBehaviour
 {
-    [SerializeField] Vector2 start = Vector2.zero; // coordinates of the start corner of the graph
-    [SerializeField] Vector2 end = Vector2.zero; // coordinates of the end corner of the graph
     [SerializeField] float nodeDistance = 1.0f; // distance at which nodes are placed
     [SerializeField] internal float nodeWidth = 1.0f; // clearance width required for placing a node
     [SerializeField] internal float graphHeight = 0.0f; // height at which the graph performs checks
@@ -23,11 +21,13 @@ public class PathfindingGraph : MonoBehaviour
     Dictionary<Vector2, Dictionary<Vector2, float>> edges
         = new Dictionary<Vector2, Dictionary<Vector2, float>>();
 
+    Bounds bounds; // bounds of the level, equal to the bounds of the ground plane
     int levelLayerMask; // layer mask which contains the static level geometry
 
     // Initialize the pathfinding graph.
     void Start()
     {
+        bounds = GameObject.FindWithTag("Ground").GetComponent<Collider>().bounds;
         levelLayerMask = LayerMask.GetMask("Level");
         CreateGraph();
     }
@@ -37,9 +37,9 @@ public class PathfindingGraph : MonoBehaviour
     void CreateGraph()
     {
         // Create the nodes
-        for (float x = start.x; x <= end.x; x += nodeDistance)
+        for (float x = bounds.min.x; x <= bounds.max.x; x += nodeDistance)
         {
-            for (float y = start.y; y <= end.y; y += nodeDistance)
+            for (float y = bounds.min.z; y <= bounds.max.z; y += nodeDistance)
             {
                 if (!Physics.CheckSphere(
                     new Vector3(x, graphHeight + nodeWidth, y),
@@ -87,7 +87,7 @@ public class PathfindingGraph : MonoBehaviour
     {
         // Find mathematical closest node
         float x = 0, y = 0;
-        for (float i = start.x; x <= end.x; i += nodeDistance)
+        for (float i = bounds.min.x; x <= bounds.max.x; i += nodeDistance)
         {
             if (Mathf.Abs(position.x - i) <= nodeDistance / 2)
             {
@@ -95,7 +95,7 @@ public class PathfindingGraph : MonoBehaviour
                 break;
             }
         }
-        for (float j = start.y; y <= end.y; j += nodeDistance)
+        for (float j = bounds.min.y; y <= bounds.max.y; j += nodeDistance)
         {
             if (Mathf.Abs(position.y - j) <= nodeDistance / 2)
             {
