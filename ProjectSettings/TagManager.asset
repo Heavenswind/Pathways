@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Level
   - Ground
+  - bluePlayer
+  - redPlayer
+  - redNPC
+  - blueNPC
   layers:
   - Default
   - TransparentFX

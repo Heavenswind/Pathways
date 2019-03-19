@@ -1575,7 +1575,7 @@ GameObject:
   - component: {fileID: 5337050678862693050}
   m_Layer: 0
   m_Name: Player Champion
-  m_TagString: Untagged
+  m_TagString: bluePlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1627,6 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4714a9bfb3f1c110788c70ed19ba76ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxLinearVelocity: 3
 --- !u!136 &2189211897556402849
 CapsuleCollider:
   m_ObjectHideFlags: 0

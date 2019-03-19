@@ -1681,7 +1681,7 @@ GameObject:
   - component: {fileID: 1135075119}
   m_Layer: 0
   m_Name: Enemy Minion Prefab
-  m_TagString: Untagged
+  m_TagString: redNPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
