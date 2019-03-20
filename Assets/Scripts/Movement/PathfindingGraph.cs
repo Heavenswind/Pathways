@@ -85,33 +85,7 @@ public class PathfindingGraph : MonoBehaviour
     // Return the position of the closest graph node to the given position.
     Vector2 ClosestNode(Vector2 position)
     {
-        // Find mathematical closest node
-        float x = 0, y = 0;
-        for (float i = bounds.min.x; x <= bounds.max.x; i += nodeDistance)
-        {
-            if (Mathf.Abs(position.x - i) <= nodeDistance / 2)
-            {
-                x = i;
-                break;
-            }
-        }
-        for (float j = bounds.min.y; y <= bounds.max.y; j += nodeDistance)
-        {
-            if (Mathf.Abs(position.y - j) <= nodeDistance / 2)
-            {
-                y = j;
-                break;
-            }
-        }
-        Vector2 closest = new Vector2(x, y);
-        if (nodes.Contains(closest))
-        {
-            return new Vector2(x, y);
-        }
-
-        // Find actual closest node if theoretical closest node doesn't exist
-        // Should happen rarely, only close to obstacles
-        closest = nodes.First();
+        Vector2 closest = nodes.First();
         foreach (Vector2 node in nodes)
         {
             if (Vector2.Distance(node, position) < Vector2.Distance(closest, position))
@@ -142,7 +116,7 @@ public class PathfindingGraph : MonoBehaviour
             queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
         ))
         {
-            return null;
+            target = ClosestNode(target);
         }
 
         // Setup required data structures
@@ -153,6 +127,7 @@ public class PathfindingGraph : MonoBehaviour
         Dictionary<Vector2, float> estimatedTotalCost = new Dictionary<Vector2, float>();
         Vector2 startNode = nodes.Contains(position)? position : ClosestNode(position);
         Vector2 endNode = nodes.Contains(target)? target : ClosestNode(target);
+
         open.Add(startNode);
         costSoFar.Add(startNode, 0);
         estimatedTotalCost.Add(startNode, Heuristic(startNode, endNode));
