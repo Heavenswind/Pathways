@@ -102,7 +102,6 @@ public class PathfindingAgent : MonoBehaviour
             ));
             if (Vector3.Angle(transform.forward, direction) > maxMovementAngle)
             {
-                Stop();
                 yield return new WaitForFixedUpdate();
                 continue;
             }
