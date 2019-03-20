@@ -29,7 +29,7 @@ GameObject:
   - component: {fileID: 7800272669188555438}
   - component: {fileID: 1055303583259769524}
   m_Layer: 8
-  m_Name: Center Capture Point
+  m_Name: Capture Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,13 +154,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.010000001
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.333333
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
       propertyPath: m_LocalPosition.z
@@ -200,16 +204,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.020000003
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.020000003
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2300002, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f3a765297c1af11c9860da27459c9242, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78ddb07f9d6748143b1ce3d4bdf25016, type: 3}
 --- !u!1 &1055303583615642947 stripped
