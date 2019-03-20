@@ -14,6 +14,7 @@ public class PathfindingAgent : MonoBehaviour
     static float threshold = 0.1f;
     static float satisfactionRadius = 1.0f;
     static float timeToTarget = 0.25f;
+    static float maxMovementAngle = 90.0f;
 
     PathfindingGraph graph; // pathfinding graph of the level
     new Rigidbody rigidbody; // rigidbody of the agent
@@ -58,7 +59,7 @@ public class PathfindingAgent : MonoBehaviour
     {
         if (path == null)
         {
-            Debug.LogError("Cannot path to an obstructed target");
+            Debug.LogError("A path could not be computed");
             Stop();
             yield break;
         }
@@ -99,6 +100,11 @@ public class PathfindingAgent : MonoBehaviour
                 Quaternion.LookRotation(direction, Vector3.up),
                 maxAngularVelocity
             ));
+            if (Vector3.Angle(transform.forward, direction) > maxMovementAngle)
+            {
+                yield return new WaitForFixedUpdate();
+                continue;
+            }
 
             // Move forward
             float distance = (targetPosition - rigidbody.transform.position).magnitude;
