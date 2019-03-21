@@ -17,12 +17,20 @@ public class MinionSpawning : MonoBehaviour
     [SerializeField]
     bool stopSpawning;
 
-    int currentSpawned;
+    [SerializeField]
+    GameObject[] capPoints;
+
+    [System.NonSerialized]
+    public int currentSpawned;
+    [System.NonSerialized]
+    public Vector2 targetLocation;
+    int locationRotate;
 
     // Start is called before the first frame update
     void Awake()
     {
         currentSpawned = 0;
+        locationRotate = 0;
         InvokeRepeating("SpawnMinion", spawnStart, spawnRate);
     }
 
@@ -34,6 +42,8 @@ public class MinionSpawning : MonoBehaviour
 
     public void SpawnMinion()
     {
+        targetLocation = new Vector2(capPoints[locationRotate].transform.position.x, capPoints[locationRotate].transform.position.z);
+
         for (int i = 0; i < amountPerSpawn; i++)
         {
             if (currentSpawned < maxNumSpawn)
@@ -43,15 +53,18 @@ public class MinionSpawning : MonoBehaviour
             }
         }
 
+        if (locationRotate == 2)
+        {
+            locationRotate = 0;
+        }
+        else
+        {
+            locationRotate++;
+        }
+
         if (stopSpawning)
         {
             CancelInvoke("SpawnMinion");
         }
-    }
-
-    public void KillMinion(GameObject minion)
-    {
-        Destroy(minion);
-        currentSpawned--;
     }
 }

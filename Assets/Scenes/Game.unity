@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1094,6 +1094,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 303464167}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &504181065 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1055303584630397618, guid: a0b504e6ac76b4541ab12fb484c10e09,
+    type: 3}
+  m_PrefabInstance: {fileID: 30144543}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &534353981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2130,6 +2136,12 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300000, guid: 3ba2141e94f44add39bb4160a6a94974, type: 3}
+--- !u!1 &1140113820 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1055303584630397618, guid: a0b504e6ac76b4541ab12fb484c10e09,
+    type: 3}
+  m_PrefabInstance: {fileID: 1889235290}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1146902349
 GameObject:
   m_ObjectHideFlags: 0
@@ -2174,6 +2186,36 @@ Transform:
   m_Father: {fileID: 56157331}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1187346642 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1101211344379430340, guid: 62dddad955a5b027ea4eb2c533ca389b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1101211344903233102}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1187346643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187346642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3357c18b0850044ade73cc4f960469, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxNumSpawn: 0
+  amountPerSpawn: 0
+  spawnStart: 0
+  spawnRate: 0
+  minion: {fileID: 0}
+  stopSpawning: 0
+  capPoints:
+  - {fileID: 1140113820}
+  - {fileID: 1333282212}
+  - {fileID: 504181065}
+  - {fileID: 1591036388}
+  - {fileID: 1440902435}
 --- !u!1 &1201952788
 GameObject:
   m_ObjectHideFlags: 0
@@ -4249,6 +4291,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1277571535}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1333282212 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1055303584630397618, guid: a0b504e6ac76b4541ab12fb484c10e09,
+    type: 3}
+  m_PrefabInstance: {fileID: 923635460}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1398329801
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4520,6 +4568,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1435026376}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1440902435 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1055303584630397618, guid: a0b504e6ac76b4541ab12fb484c10e09,
+    type: 3}
+  m_PrefabInstance: {fileID: 1819538804}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1472801888
 GameObject:
   m_ObjectHideFlags: 0
@@ -4781,6 +4835,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1562710170}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1591036388 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1055303584630397618, guid: a0b504e6ac76b4541ab12fb484c10e09,
+    type: 3}
+  m_PrefabInstance: {fileID: 1055303584628942079}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1603178861
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4961,6 +5021,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1614775179}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1675313173 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 37619874926828420, guid: 6e281cf30ec49214590195d5deb5642e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1801310964}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1675313178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1675313173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5cd1b7faa8996c46a54c07e19be23b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLinearVelocity: 3
+  spawnZone: {fileID: 1946211546}
 --- !u!4 &1708274495 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1532404813, guid: 7e206375fc4566c4c8a09ff3131b6e2b,
@@ -5751,6 +5831,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1889235290}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1946211546 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1101211344379430340, guid: 62dddad955a5b027ea4eb2c533ca389b,
+    type: 3}
+  m_PrefabInstance: {fileID: 193230750}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1946211547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946211546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3357c18b0850044ade73cc4f960469, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxNumSpawn: 500
+  amountPerSpawn: 3
+  spawnStart: 0
+  spawnRate: 5
+  minion: {fileID: 1675313173}
+  stopSpawning: 0
+  capPoints:
+  - {fileID: 1140113820}
+  - {fileID: 1440902435}
+  - {fileID: 504181065}
+  - {fileID: 1591036388}
+  - {fileID: 1333282212}
 --- !u!1 &1957820814
 GameObject:
   m_ObjectHideFlags: 0
@@ -8311,6 +8421,12 @@ PrefabInstance:
       propertyPath: m_LocalRotation.w
       value: 0.9985741
       objectReference: {fileID: 0}
+    - target: {fileID: 1980562989543393440, guid: 7e206375fc4566c4c8a09ff3131b6e2b,
+        type: 3}
+      propertyPath: fireball
+      value: 
+      objectReference: {fileID: 6563708636750609586, guid: a8695c478dc93204eaf99f47e9d8e9a0,
+        type: 3}
     - target: {fileID: 1524186683, guid: 7e206375fc4566c4c8a09ff3131b6e2b, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.18149094
@@ -9091,11 +9207,5 @@ PrefabInstance:
       propertyPath: m_LocalRotation.w
       value: 0.98311496
       objectReference: {fileID: 0}
-    - target: {fileID: 1980562989543393440, guid: 7e206375fc4566c4c8a09ff3131b6e2b,
-        type: 3}
-      propertyPath: fireball
-      value: 
-      objectReference: {fileID: 6563708636750609586, guid: a8695c478dc93204eaf99f47e9d8e9a0,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e206375fc4566c4c8a09ff3131b6e2b, type: 3}
