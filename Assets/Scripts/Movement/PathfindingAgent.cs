@@ -25,7 +25,7 @@ public class PathfindingAgent : MonoBehaviour
     IEnumerator movement; // coroutine of the movement
 
     // Initialize the pathfinding agent.
-    void Start()
+    public virtual void Start()
     {
         graph = GameObject.FindWithTag("Level").GetComponent<PathfindingGraph>();
         rigidbody = GetComponent<Rigidbody>();

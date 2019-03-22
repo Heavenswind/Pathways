@@ -13,8 +13,9 @@ public class MinionBehaviour : PathfindingAgent
         capPoint = spawnZone.GetComponent<MinionSpawning>().targetLocation;
     }
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         MoveTo(capPoint);
     }
 

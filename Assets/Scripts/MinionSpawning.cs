@@ -31,7 +31,11 @@ public class MinionSpawning : MonoBehaviour
     {
         currentSpawned = 0;
         locationRotate = 0;
-        InvokeRepeating("SpawnMinion", spawnStart, spawnRate);
+    }
+
+    private void Start()
+    {
+        StartCoroutine(SpawnMinion());
     }
 
     // Update is called once per frame
@@ -40,31 +44,39 @@ public class MinionSpawning : MonoBehaviour
         
     }
 
-    public void SpawnMinion()
+    IEnumerator SpawnMinion()
     {
-        targetLocation = new Vector2(capPoints[locationRotate].transform.position.x, capPoints[locationRotate].transform.position.z);
-
-        for (int i = 0; i < amountPerSpawn; i++)
+        yield return new WaitForSeconds(spawnStart);
+        while (!stopSpawning)
         {
-            if (currentSpawned < maxNumSpawn)
+            Debug.Log(locationRotate);
+            targetLocation = new Vector2(capPoints[locationRotate].transform.position.x, capPoints[locationRotate].transform.position.z);
+
+            for (int i = 0; i < amountPerSpawn; i++)
             {
-                Instantiate(minion, transform.position, transform.rotation);
-                currentSpawned++;
+                if (currentSpawned < maxNumSpawn)
+                {
+                    Instantiate(minion, transform.position, transform.rotation);
+                    currentSpawned++;
+                    yield return new WaitForSeconds(1.0f);
+                }
             }
-        }
 
-        if (locationRotate == 2)
-        {
-            locationRotate = 0;
-        }
-        else
-        {
-            locationRotate++;
-        }
+            if (locationRotate == 2)
+            {
+                locationRotate = 0;
+            }
+            else
+            {
+                locationRotate++;
+            }
 
-        if (stopSpawning)
-        {
-            CancelInvoke("SpawnMinion");
+            if (stopSpawning)
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(spawnRate);
         }
     }
 }
