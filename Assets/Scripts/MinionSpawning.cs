@@ -26,6 +26,9 @@ public class MinionSpawning : MonoBehaviour
     public Vector2 targetLocation;
     int locationRotate;
 
+    [SerializeField]
+    public string enemyTag;
+
     // Start is called before the first frame update
     void Awake()
     {
