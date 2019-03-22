@@ -15,10 +15,12 @@ public class PlayerController : PathfindingAgent
         {
             firemode = !firemode;
             Debug.Log("Firemode changed");
+            GetComponent<Animator>().SetBool("attacking", firemode);
         }
         // Move to the clicked spot on the level
         if (Input.GetKeyDown(KeyCode.Mouse0) && !firemode)
         {
+            GetComponent<Animator>().SetBool("attacking", false);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(
@@ -36,7 +38,7 @@ public class PlayerController : PathfindingAgent
         else if (Input.GetMouseButtonUp(0) && firemode)
         {
             FireBall();
-
+            
             firemode = !firemode;
         }
         // For testing damage
@@ -81,10 +83,11 @@ public class PlayerController : PathfindingAgent
     public void TakeDamage(int damage)
     {
         hitPoints -= damage;
-
+        GetComponent<Animator>().SetFloat("health", hitPoints);
         if (hitPoints <= 0)
         {
-            Destroy(this.gameObject);
+            /* Respawn */
+            //Destroy(this.gameObject);
         }
     }
 }
