@@ -7,6 +7,7 @@ public class MinionBehaviour : PathfindingAgent
     Vector2 capPoint;
     [SerializeField] GameObject spawnZone;
     [SerializeField] GameObject target;
+    [SerializeField] GameObject point;
 
     public string EnemyTag;
 
@@ -31,8 +32,26 @@ public class MinionBehaviour : PathfindingAgent
 
     public void KillMinion(GameObject minion)
     {
+        CheckForCapture();
+        if (point != null)
+        {
+            KillMinion(this.gameObject, point);
+        }
+        else
+        {
+            Destroy(minion);
+            spawnZone.GetComponent<MinionSpawning>().currentSpawned--;
+        }
+
+    }
+
+    //for capture point
+    public void KillMinion(GameObject minion, GameObject capPoint)
+    {
         Destroy(minion);
         spawnZone.GetComponent<MinionSpawning>().currentSpawned--;
+        capPoint.GetComponent<CapturePoint>().listUpdate();
+
     }
 
     private void CheckForEnemies()
@@ -70,12 +89,28 @@ public class MinionBehaviour : PathfindingAgent
 
         if (hitPoints <= 0)
         {
-            Destroy(this.gameObject);
+
+            KillMinion(this.gameObject);
         }
     }
 
     public void SetTarget(string tag)
     {
         EnemyTag = tag;
+    }
+
+    private void CheckForCapture()
+    {
+        Collider[] cols = Physics.OverlapSphere(transform.position, 3.0f);
+        foreach (Collider col in cols)
+        {
+            if (col.gameObject.tag == "capturePoint")
+            {
+                point = col.gameObject;
+                Debug.Log("on point!");
+
+                break;
+            }
+        }
     }
 }

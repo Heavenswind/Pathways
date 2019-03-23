@@ -8,18 +8,14 @@ public class CapturePoint : MonoBehaviour
     public float score = 5.0f;
     public float max_score = 10f;
     public float min_score = 0f;
-
     public int redTeam,blueTeam,redNPC,blueNPC = 0;
     float multiplier = 0f;
-
     public bool redCapture, blueCapture = false;
-
     Renderer rend;
-
     List<GameObject> inRange = new List<GameObject>();
-
     enum CaptureState {Red, Blue, Neutral};
     CaptureState status;
+    onPoint op; //check for units on capture point
 
     // Start is called before the first frame update
     void Start()
@@ -103,30 +99,59 @@ public class CapturePoint : MonoBehaviour
         //Add all Players/NPC to a list to keep track of all units on capture point
         if (temp != null)
         {
-            //Adding object to lsit
-            inRange.Add(temp);
+            //if (temp.GetComponent<onPoint>() != null)
+            //{
+                op = temp.GetComponent<onPoint>();
+            //}
 
-            if (temp.gameObject.tag == "redPlayer")
+            if (!op.on)
             {
-                redTeam += 1;
-                //update multipler
-                updateMultiplier();
-            }
-            if (temp.gameObject.tag == "bluePlayer")
-            {
-                Debug.Log("BluePlayer in");
-                blueTeam += 1;
-                Debug.Log(blueTeam);
-                //update multipler
-                updateMultiplier();
-            }
-            if (temp.gameObject.tag == "redNPC")
-            {
-                redNPC += 1;
-            }
-            if (temp.gameObject.tag == "blueNPC")
-            {
-                blueNPC += 1;
+                //Adding object to lsit
+                inRange.Add(temp);
+
+                if (temp.gameObject.tag == "redPlayer")
+                {
+                    redTeam += 1;
+                    //update multipler
+                    updateMultiplier();
+                }
+                if (temp.gameObject.tag == "bluePlayer")
+                {
+                    Debug.Log("BluePlayer in");
+                    blueTeam += 1;
+                    Debug.Log(blueTeam);
+                    //update multipler
+                    updateMultiplier();
+                }
+                if (temp.gameObject.tag == "redNPC")
+                {
+                    if (status == CaptureState.Neutral || status == CaptureState.Blue)
+                    {
+                        score = Mathf.Max(score - 0.25f, min_score);
+                        temp.GetComponent<MinionBehaviour>().KillMinion(temp, this.gameObject);
+                    }
+                    else
+                    {
+                        redNPC += 1;
+                    }
+                }
+                if (temp.gameObject.tag == "blueNPC")
+                {
+                    if (status == CaptureState.Neutral || status == CaptureState.Red)
+                    {
+                        score = Mathf.Min(score + 0.25f, max_score);
+                        temp.GetComponent<MinionBehaviour>().KillMinion(temp, this.gameObject);
+                    }
+                    else
+                    {
+                        blueNPC += 1;
+                    }
+                }
+
+                if (temp != null)
+                {
+                    op.on = true;
+                }
             }
 
         }
@@ -138,28 +163,35 @@ public class CapturePoint : MonoBehaviour
 
         if (temp != null)
         {
-            inRange.Remove(temp);
+            op = temp.GetComponent<onPoint>();
 
-            if (temp.gameObject.tag == "redPlayer")
+            if (op)
             {
-                redTeam -= 1;
-                //update multipler
-                updateMultiplier();
-            }
-            if (temp.gameObject.tag == "bluePlayer")
-            {
-                
-                blueTeam -= 1;
-                //update multipler
-                updateMultiplier();
-            }
-            if (temp.gameObject.tag == "redNPC")
-            {
-                redNPC -= 1;
-            }
-            if (temp.gameObject.tag == "blueNPC")
-            {
-                blueNPC -= 1;
+                inRange.Remove(temp);
+
+                if (temp.gameObject.tag == "redPlayer")
+                {
+                    redTeam -= 1;
+                    //update multipler
+                    updateMultiplier();
+                }
+                if (temp.gameObject.tag == "bluePlayer")
+                {
+
+                    blueTeam -= 1;
+                    //update multipler
+                    updateMultiplier();
+                }
+                if (temp.gameObject.tag == "redNPC")
+                {
+                    redNPC -= 1;
+                }
+                if (temp.gameObject.tag == "blueNPC")
+                {
+                    blueNPC -= 1;
+                }
+
+                op.on = false;
             }
 
         }

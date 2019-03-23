@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -203,7 +203,7 @@ PrefabInstance:
     - target: {fileID: 1055303583615642947, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1055303583615642949, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
@@ -1120,6 +1120,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLinearVelocity: 3
   spawnZone: {fileID: 1187346642}
+  target: {fileID: 0}
+  point: {fileID: 0}
+  EnemyTag: 
 --- !u!1001 &534353981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1262,7 +1265,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 26.991467
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1843,7 +1846,7 @@ PrefabInstance:
     - target: {fileID: 1055303583615642947, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1055303583615642949, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
@@ -2236,6 +2239,7 @@ MonoBehaviour:
   - {fileID: 504181065}
   - {fileID: 1591036388}
   - {fileID: 1440902435}
+  enemyTag: 
 --- !u!1 &1201952788
 GameObject:
   m_ObjectHideFlags: 0
@@ -5061,6 +5065,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLinearVelocity: 3
   spawnZone: {fileID: 1946211546}
+  target: {fileID: 0}
+  point: {fileID: 0}
+  EnemyTag: 
 --- !u!4 &1708274495 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1532404813, guid: 7e206375fc4566c4c8a09ff3131b6e2b,
@@ -5609,7 +5616,7 @@ PrefabInstance:
     - target: {fileID: 1055303583615642947, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1055303583615642949, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
@@ -5826,7 +5833,7 @@ PrefabInstance:
     - target: {fileID: 1055303583615642947, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1055303583615642949, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
@@ -5881,6 +5888,7 @@ MonoBehaviour:
   - {fileID: 504181065}
   - {fileID: 1591036388}
   - {fileID: 1333282212}
+  enemyTag: 
 --- !u!1 &1957820814
 GameObject:
   m_ObjectHideFlags: 0
@@ -8193,7 +8201,7 @@ PrefabInstance:
     - target: {fileID: 1055303583615642947, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1055303583615642949, guid: a0b504e6ac76b4541ab12fb484c10e09,
         type: 3}

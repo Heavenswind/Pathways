@@ -10,6 +10,7 @@ TagManager:
   - redPlayer
   - redNPC
   - blueNPC
+  - capturePoint
   layers:
   - Default
   - TransparentFX
