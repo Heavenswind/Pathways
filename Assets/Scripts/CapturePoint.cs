@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class CapturePoint : MonoBehaviour
 {
-
+    Color blue = new Color(0.0f, 0.3005602f, 0.6132076f, 0.0f);
+    Color red = new Color(0.5566038f, 0.0f, 0.0f, 0.0f);
+    
     public float score = 5.0f;
     public float max_score = 10f;
     public float min_score = 0f;
@@ -32,10 +34,10 @@ public class CapturePoint : MonoBehaviour
         if (score >= 5f)
         {
             //Color adjusts between black (neutral) and blue
-            rend.material.color = Color.Lerp(Color.black, Color.blue, (score - (max_score / 2)) / (max_score/2));
+            rend.material.color = Color.Lerp(Color.black, blue, (score - (max_score / 2)) / (max_score/2));
         } else {
             //Color adjusts between black (netural) and red
-            rend.material.color = Color.Lerp(Color.red, Color.black, score / (max_score / 2));
+            rend.material.color = Color.Lerp(red, Color.black, score / (max_score / 2));
         }
 
         //if more red team players are on point, increase affinity for red team
@@ -160,7 +162,7 @@ public class CapturePoint : MonoBehaviour
     void OnTriggerExit(Collider collider)
     {
         GameObject temp = collider.gameObject;
-
+        Debug.Log("Exit Triggered " + temp.gameObject.name);
         if (temp != null)
         {
             op = temp.GetComponent<onPoint>();
