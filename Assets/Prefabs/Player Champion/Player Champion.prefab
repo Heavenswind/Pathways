@@ -1574,6 +1574,7 @@ GameObject:
   - component: {fileID: 1980562989543393440}
   - component: {fileID: 2189211897556402849}
   - component: {fileID: 5337050678862693050}
+  - component: {fileID: 4178489104268555126}
   m_Layer: 0
   m_Name: Player Champion
   m_TagString: bluePlayer
@@ -1629,8 +1630,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLinearVelocity: 3
-  fireball: {fileID: 6563708636750609586, guid: a8695c478dc93204eaf99f47e9d8e9a0,
-    type: 3}
+  fireball: {fileID: 0}
+  point: {fileID: 0}
 --- !u!136 &2189211897556402849
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1657,10 +1658,23 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4178489104268555126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1532404811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb1cee06aca91d4eacb50951322b898, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 0
 --- !u!1 &1532414305
 GameObject:
   m_ObjectHideFlags: 0

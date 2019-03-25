@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 public class PlayerController : PathfindingAgent
 {
     [SerializeField] public GameObject fireball;
+    [SerializeField] public GameObject point;
 
     private bool firemode;
     private float speed = 10.0f;
@@ -86,8 +87,28 @@ public class PlayerController : PathfindingAgent
         GetComponent<Animator>().SetFloat("health", hitPoints);
         if (hitPoints <= 0)
         {
-            /* Respawn */
-            //Destroy(this.gameObject);
+            Destroy(this.gameObject);
+            CheckForCapture();
+
+            if (point != null)
+            {
+                point.GetComponent<CapturePoint>().listUpdate();
+            }
+        }
+    }
+
+    private void CheckForCapture()
+    {
+        Collider[] cols = Physics.OverlapSphere(transform.position, 0.5f);
+        foreach (Collider col in cols)
+        {
+            if (col.gameObject.tag == "capturePoint")
+            {
+                point = col.gameObject;
+                Debug.Log("on point!");
+
+                break;
+            }
         }
     }
 }

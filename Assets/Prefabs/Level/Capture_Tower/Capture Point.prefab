@@ -10,7 +10,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 7.88
+  m_Radius: 4.97
   m_Height: 60.61
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: -23}
@@ -28,9 +28,9 @@ GameObject:
   - component: {fileID: 7630300446158939649}
   - component: {fileID: 7800272669188555438}
   - component: {fileID: 1055303583259769524}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Capture Point
-  m_TagString: Untagged
+  m_TagString: capturePoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
