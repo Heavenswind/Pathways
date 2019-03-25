@@ -1,61 +1,111 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(Rigidbody))]
 // Agent that performs pathfinding to move across the level.
+[RequireComponent(typeof(CharacterController))]
 public class PathfindingAgent : MonoBehaviour
 {
+    [Header("Pathfiding Agent")]
     public float maxLinearVelocity = 3.0f;
     
-    static float maxAngularVelocity = 7.5f;
-    static float threshold = 0.1f;
-    static float satisfactionRadius = 1.0f;
-    static float timeToTarget = 0.25f;
-    static float maxMovementAngle = 90.0f;
+    private const float maxAngularVelocity = 15.0f;
+    private const float maxMovementAngle = 90.0f;
+    private const float satisfactionRadius = 1.0f;
+    private const float timeToTarget = 0.25f;
+    private const float arrivalThreshold = 0.1f;
 
-    PathfindingGraph graph; // pathfinding graph of the level
-    new Rigidbody rigidbody; // rigidbody of the agent
-    new Collider collider; // collider of the agent
-    Animator animator;
+    protected CharacterController controller;
+    protected Animator animator;
+    protected bool activated = true;
     
-    Vector3 velocity; // velocity of the agent
-    IEnumerator movement; // coroutine of the movement
+    private PathfindingGraph graph; // pathfinding graph of the level
+    private IEnumerator movement; // coroutine of the movement
+    private Vector3 velocity; // velocity of the agent
+    private Action onMovementCompletionAction; // action performed after completing a movement coroutine
+
+    public bool isStill
+    {
+        get { return velocity == Vector3.zero; }
+    }
 
     // Initialize the pathfinding agent.
-    public virtual void Start()
+    protected virtual void Awake()
     {
         graph = GameObject.FindWithTag("Level").GetComponent<PathfindingGraph>();
-        rigidbody = GetComponent<Rigidbody>();
-        collider = GetComponent<Collider>();
+        controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
     }
 
-    // Make the agent move toward the target position following the shortest path possible.
-    public void MoveTo(Vector2 targetPosition)
+    // Disable the unit.
+    public void Disable()
     {
+        Stop();
+        activated = false;
+    }
+
+    // Make the agent move toward the target position following the shortest path possible.
+    // The pathing stops when the agent is within the acceptance range of the target position.
+    public void MoveTo(Vector2 targetPosition, float acceptanceRange = 0, Action completionAction = null)
+    {
+        if (!activated) return;
+        Stop();
+        onMovementCompletionAction = completionAction;
+        Vector2 currentPosition = new Vector2(transform.position.x, transform.position.z);
+        List<Vector2> path = graph.ComputePath(currentPosition, targetPosition, acceptanceRange == 0);
+        movement = FollowPathCoroutine(path, acceptanceRange);
+        StartCoroutine(movement);
+    }
+
+    // Make the agent move toward the target position following the shortest path possible.
+    // The pathing stops when the agent is within the acceptance range of the target position.
+    public void MoveTo(Vector3 targetPosition, float acceptanceRange = 0, Action completionAction = null)
+    {
+        MoveTo(new Vector2(targetPosition.x, targetPosition.z), acceptanceRange, completionAction);
+    }
+
+    // Make the agent rotate toward the given target position.
+    public void RotateTowards(Vector2 targetPosition, Action completionAction = null)
+    {
+        if (!activated) return;
+        Stop();
+        onMovementCompletionAction = completionAction;
+        movement = RotateTowardsCoroutine(targetPosition);
+        StartCoroutine(movement);
+    }
+
+    // Make the agent rotate toward the given target position.
+    public void RotateTowards(Vector3 targetPosition, Action completionAction = null)
+    {
+        RotateTowards(new Vector2(targetPosition.x, targetPosition.z), completionAction);
+    }
+
+    // Reset the state of the pathfinding agent.
+    // It stops any prior movement coroutine.
+    // If the movementCompleted flag is set, the current movement completion action is performed.
+    public void Stop(bool movementCompleted = false)
+    {
+        // Halting movement
         if (movement != null)
         {
             StopCoroutine(movement);
         }
-        Vector2 currentPosition = new Vector2(rigidbody.position.x, rigidbody.position.z);
-        List<Vector2> path = graph.ComputePath(currentPosition, targetPosition);
-        movement = FollowPath(path);
-        StartCoroutine(movement);
-    }
-
-    // Make the agent stop its movement.
-    public void Stop()
-    {
         velocity = Vector3.zero;
         animator.SetFloat("speed", velocity.magnitude);
+        
+        // Movement completion action
+        if (movementCompleted && onMovementCompletionAction != null)
+        {
+            onMovementCompletionAction();
+        }
     }
 
     // Make the agent follow the given path.
     // The path is smoothed during the process.
-    IEnumerator FollowPath(List<Vector2> path)
+    // The pathing stops when the agent is within the acceptance range of the goal node.
+    private IEnumerator FollowPathCoroutine(List<Vector2> path, float acceptanceRange = 0)
     {
         if (path == null)
         {
@@ -68,38 +118,40 @@ public class PathfindingAgent : MonoBehaviour
         while (true)
         {            
             // Path smoothing
-            collider.enabled = false;
+            GetComponent<Collider>().enabled = false;
             for (int i = targetIndex + 1; i < path.Count; ++i)
             {
-                if (!Physics.CheckCapsule(
-                    new Vector3(
-                        rigidbody.position.x,
-                        graph.graphHeight + graph.nodeWidth,
-                        rigidbody.position.z
-                    ),
+                var pathIsClear = !Physics.CheckCapsule(
+                    new Vector3(transform.position.x, graph.graphHeight + graph.nodeWidth, transform.position.z),
                     new Vector3(path[i].x, graph.graphHeight + graph.nodeWidth, path[i].y),
                     graph.nodeWidth,
-                    layerMask: Physics.DefaultRaycastLayers,
-                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
-                ))
+                    layerMask: PathfindingGraph.levelLayerMask,
+                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore);
+                if (pathIsClear || (i == path.Count - 1 && acceptanceRange > 0))
                 {
                     targetIndex = i;
                 }
+                else
+                {
+                    break;
+                }
             }
-            collider.enabled = true;
+            GetComponent<Collider>().enabled = true;
             
             // Rotate towards direction
             Vector3 targetPosition = new Vector3(
                 path[targetIndex].x,
-                rigidbody.position.y,
+                transform.position.y,
                 path[targetIndex].y
             );
-            Vector3 direction = (targetPosition - rigidbody.transform.position).normalized;
-            rigidbody.MoveRotation(Quaternion.RotateTowards(
-                transform.rotation,
-                Quaternion.LookRotation(direction, Vector3.up),
-                maxAngularVelocity
-            ));
+            Vector3 direction = (targetPosition - transform.position).normalized;
+            if (direction != Vector3.zero)
+            {
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation,
+                    Quaternion.LookRotation(direction, Vector3.up),
+                    maxAngularVelocity);
+            }
             if (Vector3.Angle(transform.forward, direction) > maxMovementAngle)
             {
                 yield return new WaitForFixedUpdate();
@@ -107,31 +159,36 @@ public class PathfindingAgent : MonoBehaviour
             }
 
             // Move forward
-            float distance = (targetPosition - rigidbody.transform.position).magnitude;
+            float distance = (targetPosition - transform.position).magnitude;
             if (targetIndex < path.Count - 1)
             {
                 velocity = transform.forward * maxLinearVelocity;
             }
             else
             {
-                if (distance > satisfactionRadius)
+                if (acceptanceRange > 0 && distance <= acceptanceRange)
+                {
+                    Stop(true);
+                    yield break;
+                }
+                else if (distance > satisfactionRadius)
                 {
                     velocity = transform.forward * maxLinearVelocity;
                 }
-                else if (distance > threshold)
+                else if (distance > arrivalThreshold)
                 {
                     velocity = transform.forward
                         * Mathf.Min(maxLinearVelocity, distance / timeToTarget);
                 }
                 else
                 {
-                    Stop();
+                    Stop(true);
                     yield break;
                 }
             }
-            rigidbody.MovePosition(rigidbody.position + velocity * Time.deltaTime);
-            distance = (targetPosition - rigidbody.transform.position).magnitude;
-            if (targetIndex < path.Count - 1 && distance < threshold)
+            controller.Move(velocity * Time.deltaTime);
+            distance = (targetPosition - transform.position).magnitude;
+            if (targetIndex < path.Count - 1 && distance < arrivalThreshold)
             {
                 targetIndex += 1;
             }
@@ -139,5 +196,21 @@ public class PathfindingAgent : MonoBehaviour
             animator.SetFloat("speed", velocity.magnitude);
             yield return new WaitForFixedUpdate();
         }
+    }
+
+    // Make the agent rotate toward the given target position.
+    private IEnumerator RotateTowardsCoroutine(Vector2 position)
+    {
+        var targetPosition = new Vector3(position.x, transform.position.y, position.y);
+        Vector3 direction = (targetPosition - transform.transform.position).normalized;
+        while (transform.forward != direction)
+        {
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                Quaternion.LookRotation(direction, Vector3.up),
+                maxAngularVelocity);
+            yield return new WaitForFixedUpdate();
+        }
+        Stop(true);
     }
 }

@@ -11,6 +11,9 @@ TagManager:
   - redNPC
   - blueNPC
   - capturePoint
+  - Obstacle
+  - blueBase
+  - redBase
   layers:
   - Default
   - TransparentFX
@@ -23,7 +26,7 @@ TagManager:
   - Level
   - Post Processing
   - Capture Points
-  - 
+  - Units
   - 
   - 
   - 

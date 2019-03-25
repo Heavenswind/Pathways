@@ -8,21 +8,22 @@ using UnityEngine;
 // It is used to perform agent pathfinding through the level.
 public class PathfindingGraph : MonoBehaviour
 {
-    [SerializeField] float nodeDistance = 1.0f; // distance at which nodes are placed
+    [SerializeField] internal float nodeDistance = 1.0f; // distance at which nodes are placed
     [SerializeField] internal float nodeWidth = 1.0f; // clearance width required for placing a node
     [SerializeField] internal float graphHeight = 0.0f; // height at which the graph performs checks
 
+    internal static int levelLayerMask; // layer mask which contains the static level geometry
+    
     // set of graph nodes
-    HashSet<Vector2> nodes
+    private HashSet<Vector2> nodes
         = new HashSet<Vector2>();
 
     // dictionary of node edges and costs
     // format: Dictionary<fromNode, Dictionary<toNode, edgeCost>>
-    Dictionary<Vector2, Dictionary<Vector2, float>> edges
+    private Dictionary<Vector2, Dictionary<Vector2, float>> edges
         = new Dictionary<Vector2, Dictionary<Vector2, float>>();
 
-    Bounds bounds; // bounds of the level, equal to the bounds of the ground plane
-    int levelLayerMask; // layer mask which contains the static level geometry
+    private Bounds bounds; // bounds of the level, equal to the bounds of the ground plane
 
     // Initialize the pathfinding graph.
     void Start()
@@ -32,89 +33,39 @@ public class PathfindingGraph : MonoBehaviour
         CreateGraph();
     }
 
-    // Create the pathfinding graph.
-    // Nodes and edges are generated automatically using physics checks to detect obstacles.
-    void CreateGraph()
+    // Draw the pathfinding graph nodes and edges in the scene if the gizmo is enabled.
+    void OnDrawGizmos()
     {
-        // Create the nodes
-        for (float x = bounds.min.x; x <= bounds.max.x; x += nodeDistance)
-        {
-            for (float y = bounds.min.z; y <= bounds.max.z; y += nodeDistance)
-            {
-                if (!Physics.CheckSphere(
-                    new Vector3(x, graphHeight + nodeWidth, y),
-                    nodeWidth,
-                    layerMask: levelLayerMask,
-                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
-                ))
-                {
-                    Vector2 node = new Vector2(x, y);
-                    nodes.Add(new Vector2(x, y));
-                    edges.Add(node, new Dictionary<Vector2, float>());
-                }
-            }
-        }
-
-        // Create the edges
+        Gizmos.color = Color.red;
         foreach (Vector2 node in nodes)
         {
-            Vector2[] neighbors = {
-                node + new Vector2(-nodeDistance, 0),
-                node + new Vector2(-nodeDistance, nodeDistance),
-                node + new Vector2(0, nodeDistance),
-                node + new Vector2(nodeDistance, nodeDistance)
-            };
-            foreach (Vector2 neighbor in neighbors)
-            {
-                if (nodes.Contains(neighbor) && !Physics.CheckCapsule(
-                    new Vector3(node.x, graphHeight + nodeWidth, node.y),
-                    new Vector3(neighbor.x, graphHeight + nodeWidth, neighbor.y),
-                    nodeWidth,
-                    layerMask: levelLayerMask,
-                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
-                ))
-                {
-                    float distance = Vector2.Distance(node, neighbor);
-                    edges[node].Add(neighbor, distance);
-                    edges[neighbor].Add(node, distance);
-                }
-            }
+            Gizmos.DrawSphere(new Vector3(node.x, graphHeight, node.y), 0.1f);
         }
-    }
-
-    // Return the position of the closest graph node to the given position.
-    Vector2 ClosestNode(Vector2 position)
-    {
-        Vector2 closest = nodes.First();
-        foreach (Vector2 node in nodes)
+        foreach (Vector2 from in edges.Keys)
         {
-            if (Vector2.Distance(node, position) < Vector2.Distance(closest, position))
+            foreach (Vector2 to in edges[from].Keys)
             {
-                closest = node;
+                Gizmos.DrawLine(
+                    new Vector3(from.x, graphHeight, from.y),
+                    new Vector3(to.x, graphHeight, to.y)
+                );
             }
         }
-        return closest;
-    }
-
-    // Heuristic to use by the A* pathfinding algorithm.
-    // Returns the Euclidean distance between the position and the target.
-    float Heuristic(Vector2 position, Vector2 target)
-    {
-        return Vector2.Distance(position, target);
     }
 
     // Compute and return the shortest path from the position to the target.
     // This is an implementation of the A* pathfinding algorithm.
     // It uses the Euclidean distance as the heuristic.
-    public List<Vector2> ComputePath(Vector2 position, Vector2 target)
+    // The approximate flag allows the character to move the the nearest node if the target position
+    // is obstructed.
+    public List<Vector2> ComputePath(Vector2 position, Vector2 target, bool approximate = true)
     {
         // Check target validity
-        if (Physics.CheckSphere(
+        if (approximate && Physics.CheckSphere(
             new Vector3(target.x, graphHeight + nodeWidth, target.y),
             nodeWidth,
             layerMask: Physics.DefaultRaycastLayers,
-            queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore
-        ))
+            queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore))
         {
             target = ClosestNode(target);
         }
@@ -186,23 +137,72 @@ public class PathfindingGraph : MonoBehaviour
         return path;
     }
 
-    // Draw the pathfinding graph nodes and edges in the scene if the gizmo is enabled.
-    void OnDrawGizmos()
+        // Create the pathfinding graph.
+    // Nodes and edges are generated automatically using physics checks to detect obstacles.
+    private void CreateGraph()
     {
-        Gizmos.color = Color.red;
-        foreach (Vector2 node in nodes)
+        // Create the nodes
+        for (float x = bounds.min.x; x <= bounds.max.x; x += nodeDistance)
         {
-            Gizmos.DrawSphere(new Vector3(node.x, graphHeight, node.y), 0.1f);
-        }
-        foreach (Vector2 from in edges.Keys)
-        {
-            foreach (Vector2 to in edges[from].Keys)
+            for (float y = bounds.min.z; y <= bounds.max.z; y += nodeDistance)
             {
-                Gizmos.DrawLine(
-                    new Vector3(from.x, graphHeight, from.y),
-                    new Vector3(to.x, graphHeight, to.y)
-                );
+                if (!Physics.CheckSphere(
+                    new Vector3(x, graphHeight + nodeWidth, y),
+                    nodeWidth,
+                    layerMask: levelLayerMask,
+                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    Vector2 node = new Vector2(x, y);
+                    nodes.Add(new Vector2(x, y));
+                    edges.Add(node, new Dictionary<Vector2, float>());
+                }
             }
         }
+
+        // Create the edges
+        foreach (Vector2 node in nodes)
+        {
+            Vector2[] neighbors = {
+                node + new Vector2(-nodeDistance, 0),
+                node + new Vector2(-nodeDistance, nodeDistance),
+                node + new Vector2(0, nodeDistance),
+                node + new Vector2(nodeDistance, nodeDistance)
+            };
+            foreach (Vector2 neighbor in neighbors)
+            {
+                if (nodes.Contains(neighbor) && !Physics.CheckCapsule(
+                    new Vector3(node.x, graphHeight + nodeWidth, node.y),
+                    new Vector3(neighbor.x, graphHeight + nodeWidth, neighbor.y),
+                    nodeWidth,
+                    layerMask: levelLayerMask,
+                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore))
+                {
+                    float distance = Vector2.Distance(node, neighbor);
+                    edges[node].Add(neighbor, distance);
+                    edges[neighbor].Add(node, distance);
+                }
+            }
+        }
+    }
+
+    // Return the position of the closest graph node to the given position.
+    private Vector2 ClosestNode(Vector2 position)
+    {
+        Vector2 closest = nodes.First();
+        foreach (Vector2 node in nodes)
+        {
+            if (Vector2.Distance(node, position) < Vector2.Distance(closest, position))
+            {
+                closest = node;
+            }
+        }
+        return closest;
+    }
+
+    // Heuristic to use by the A* pathfinding algorithm.
+    // Returns the Euclidean distance between the position and the target.
+    private float Heuristic(Vector2 position, Vector2 target)
+    {
+        return Vector2.Distance(position, target);
     }
 }

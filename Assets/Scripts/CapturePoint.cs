@@ -4,255 +4,112 @@ using UnityEngine;
 
 public class CapturePoint : MonoBehaviour
 {
-    Color blue = new Color(0.0f, 0.3005602f, 0.6132076f, 0.0f);
-    Color red = new Color(0.5566038f, 0.0f, 0.0f, 0.0f);
+    // State of the capture point
+    internal enum CaptureState {Red, Blue, Neutral};
+    internal CaptureState status = CaptureState.Neutral;
+    private int redTeam, blueTeam, redNPC, blueNPC = 0;
     
-    public float score = 5.0f;
-    public float max_score = 10f;
-    public float min_score = 0f;
-    public int redTeam,blueTeam,redNPC,blueNPC = 0;
-    float multiplier = 0f;
-    public bool redCapture, blueCapture = false;
-    Renderer rend;
-    List<GameObject> inRange = new List<GameObject>();
-    enum CaptureState {Red, Blue, Neutral};
-    CaptureState status;
-    onPoint op; //check for units on capture point
+    // Score of the capture point
+    internal const float minScore = 0f;
+    internal const float maxScore = 10f;
+    internal const float medianScore = (maxScore - minScore) / 2;
+    internal float score = medianScore;
+    private const float captureRatePerUnit = 0.25f;
+    private const float championMultiplier = 1.2f;
 
-    // Start is called before the first frame update
+    // Bounds of the capture point
+    private new Collider collider;
+    private Vector3 size;
+    private int unitLayerMask;
+    
+    // Color of the control point
+    private new Renderer renderer;
+    private Color neutralColor;
+    private Color blueColor;
+    private Color redColor;
+
+    void Awake()
+    {
+        collider = GetComponent<Collider>();
+        size = collider.bounds.size;
+        unitLayerMask = LayerMask.GetMask("Units");
+        renderer = GetComponent<Renderer>();
+        neutralColor = renderer.material.color;
+    }
+
     void Start()
     {
-        rend = GetComponent<Renderer>();
-        
-        status = CaptureState.Neutral;
+        blueColor = GameController.instance.blueColor;
+        redColor = GameController.instance.redColor;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //Update visual affinity of capture point. Point will gradually change to the teams color as it is closer to "capturing it"
-        if (score >= 5f)
-        {
-            //Color adjusts between black (neutral) and blue
-            rend.material.color = Color.Lerp(Color.black, blue, (score - (max_score / 2)) / (max_score/2));
-        } else {
-            //Color adjusts between black (netural) and red
-            rend.material.color = Color.Lerp(red, Color.black, score / (max_score / 2));
-        }
-
-        //if more red team players are on point, increase affinity for red team
-        if (redTeam > blueTeam)
-        {
-            if (score > min_score)
-            {
-                score = Mathf.Max( score - 0.25f * multiplier * Time.deltaTime, min_score);
-            }
-            
-        }
-
-        //if more blue team players are on point, increase affinity for blue team
-        if (blueTeam > redTeam)
-        {
-            if (score < max_score)
-            {
-                score = Mathf.Min(score + 0.25f * multiplier * Time.deltaTime, max_score);
-            }
-        }
-
-        //update point
-        updatePoint();
+        CheckForUnits();
+        UpdateScore();
+        UpdateColor();
     }
 
-    //updates point to determine if it is captured or not. If captured should add to overal score (control for this should be on the main camera and mutliplied by towers captured)
-    void updatePoint()
+    // Check if the capture point is owned by the given team name.
+    public bool IsOwnedByTeam(string team)
     {
-        if (score == min_score)
+        if ((team == "blue" && status == CaptureState.Blue) || (team == "red" && status == CaptureState.Red))
         {
-            redCapture = true;
-            blueCapture = false;
-            status = CaptureState.Red;
+            return true;
         }
+        return false;
+    }
 
-        if (score == max_score)
+    // Check the units that are on the capture point.
+    // They are counted based on their team (blue/red) and unit type (champion/minion).
+    private void CheckForUnits()
+    {
+        redTeam = blueTeam = redNPC = blueNPC = 0;
+        Collider[] colliders = Physics.OverlapSphere(
+            transform.position,
+            size.x / 2,
+            unitLayerMask,
+            QueryTriggerInteraction.Ignore);
+        foreach (Collider collider in colliders)
         {
-            redCapture = false;
-            blueCapture = true;
-            status = CaptureState.Blue;
+            switch (collider.tag)
+            {
+                case "bluePlayer": ++blueTeam; break;
+                case "redPlayer": ++redTeam; break;
+                case "blueNPC": ++blueNPC; break;
+                case "redNPC": ++redNPC; break;
+                default: break;
+            }
+        }
+    }
+
+    // Update the score
+    private void UpdateScore()
+    {
+        score += (blueTeam + blueNPC) * Mathf.Max(1, championMultiplier * blueTeam) * captureRatePerUnit * Time.deltaTime;
+        score -= (redTeam + redNPC) * Mathf.Max(1, championMultiplier * redTeam) * captureRatePerUnit * Time.deltaTime;
+        score = Mathf.Min(score, maxScore);
+        score = Mathf.Max(score, minScore);
+        switch (score)
+        {
+            case maxScore: status = CaptureState.Blue; break;
+            case minScore: status = CaptureState.Red; break;
+            default: status = CaptureState.Neutral; break;
+        }
+    }
+
+    // Update visual affinity of capture point. Point will gradually change to the teams color as it is closer to "capturing it".
+    private void UpdateColor()
+    {
+        if (score >= medianScore)
+        {
+            //Color adjusts between neutral and blue
+            renderer.material.color = Color.Lerp(neutralColor, blueColor, (score - (maxScore / 2)) / (maxScore / 2));
         }
         else
         {
-            redCapture = false;
-            blueCapture = false;
-            status = CaptureState.Neutral;
+            //Color adjusts between netural and red
+            renderer.material.color = Color.Lerp(redColor, neutralColor, score / (maxScore / 2));
         }
-    }
-
-
-    //Multiplier for # points for capturing a point. If one team has more players on the point than the other they can have a 1.5 or 2x multiplier (1 more player/ 2 more players)
-    void updateMultiplier()
-    {
-        multiplier = (Mathf.Abs(redTeam - blueTeam)/2 + 1) + Mathf.Min(Mathf.Abs(redNPC - blueNPC)/3,1);
-    }
-
-    void OnTriggerEnter(Collider collider)
-    {
-        GameObject temp = collider.gameObject;
-
-        //Add all Players/NPC to a list to keep track of all units on capture point
-        if (temp != null)
-        {
-            //if (temp.GetComponent<onPoint>() != null)
-            //{
-                op = temp.GetComponent<onPoint>();
-            //}
-
-            if (!op.on)
-            {
-                //Adding object to lsit
-                inRange.Add(temp);
-
-                if (temp.gameObject.tag == "redPlayer")
-                {
-                    redTeam += 1;
-                    //update multipler
-                    updateMultiplier();
-                }
-                if (temp.gameObject.tag == "bluePlayer")
-                {
-                    Debug.Log("BluePlayer in");
-                    blueTeam += 1;
-                    Debug.Log(blueTeam);
-                    //update multipler
-                    updateMultiplier();
-                }
-                if (temp.gameObject.tag == "redNPC")
-                {
-                    if (status == CaptureState.Neutral || status == CaptureState.Blue)
-                    {
-                        score = Mathf.Max(score - 0.25f, min_score);
-                        temp.GetComponent<MinionBehaviour>().KillMinion(temp, this.gameObject);
-                    }
-                    else
-                    {
-                        redNPC += 1;
-                    }
-                }
-                if (temp.gameObject.tag == "blueNPC")
-                {
-                    if (status == CaptureState.Neutral || status == CaptureState.Red)
-                    {
-                        score = Mathf.Min(score + 0.25f, max_score);
-                        temp.GetComponent<MinionBehaviour>().KillMinion(temp, this.gameObject);
-                    }
-                    else
-                    {
-                        blueNPC += 1;
-                    }
-                }
-
-                if (temp != null)
-                {
-                    op.on = true;
-                }
-            }
-
-        }
-    }
-
-    void OnTriggerExit(Collider collider)
-    {
-        GameObject temp = collider.gameObject;
-        Debug.Log("Exit Triggered " + temp.gameObject.name);
-        if (temp != null)
-        {
-            op = temp.GetComponent<onPoint>();
-
-            if (op)
-            {
-                inRange.Remove(temp);
-
-                if (temp.gameObject.tag == "redPlayer")
-                {
-                    redTeam -= 1;
-                    //update multipler
-                    updateMultiplier();
-                }
-                if (temp.gameObject.tag == "bluePlayer")
-                {
-
-                    blueTeam -= 1;
-                    //update multipler
-                    updateMultiplier();
-                }
-                if (temp.gameObject.tag == "redNPC")
-                {
-                    redNPC -= 1;
-                }
-                if (temp.gameObject.tag == "blueNPC")
-                {
-                    blueNPC -= 1;
-                }
-
-                op.on = false;
-            }
-
-        }
-    }
-
-    //checks to see if any objects were destroyed (null). Any destroyed unit should call this.
-    public void listUpdate()
-    {
-
-        //temp ints to compare 
-        int rt = 0;
-        int bt = 0;
-        int rn = 0;
-        int bn = 0;
-
-        //temp list to fill with all !null objects
-        List<GameObject> temp = new List<GameObject>();
-
-
-        //if list is not empty
-        if (inRange.Count != 0)
-        {
-            //iterate through list
-            for (int i = 0; i < inRange.Count; i++)
-            {
-                //if object exits, add to proper variable
-                if (inRange[i].gameObject != null)
-                {
-                    switch (inRange[i].gameObject.tag)
-                    {
-                        case "redPlayer": rt += 1;
-                            break;
-                        case "bluePlayer":
-                            bt += 1;
-                            break;
-                        case "redNPC":
-                            rn += 1;
-                            break;
-                        case "blueNPC":
-                            bn += 1;
-                            break;
-
-                    }
-
-                    // add to temp list
-                    temp.Add(inRange[i].gameObject);
-                }
-                
-            }
-            
-            //comparision of list values vs capture point values
-            if (rt < redTeam) { redTeam = rt; }
-            if (bt < blueTeam) { blueTeam = rt; }
-            if (rn < redNPC) { redNPC = rt; }
-            if (bn < blueNPC) { blueNPC = rt; }
-
-        }
-        //clears list and update with new one.
-        inRange.Clear();
-        inRange.AddRange(temp);
     }
 }

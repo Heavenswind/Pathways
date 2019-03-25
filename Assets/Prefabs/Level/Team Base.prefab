@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1101211344379430338}
   - component: {fileID: 5956955572339989419}
   - component: {fileID: 1101211344379430341}
+  - component: {fileID: 3576455870464054200}
   m_Layer: 0
   m_Name: Team Base
   m_TagString: Untagged
@@ -106,3 +107,15 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3576455870464054200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1101211344379430340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3357c18b0850044ade73cc4f960469, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
