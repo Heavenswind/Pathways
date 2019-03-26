@@ -10,11 +10,12 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] internal int[] transitions = null;
     
     internal static bool spawning = true;
-    private static float spawnStartDelay = 0;
-    private static float spawnRate = 10;
-    private static float delayPerSpawnInWave = 0.15f;
-    private static int amountPerWave = 6;
-    private static int maxMinionCount = 18;
+    private const float spawnStartDelay = 0;
+    private const float spawnRate = 10;
+    private const float delayPerSpawnInWave = 0.15f;
+    private const int amountPerWave = 6;
+    private const int maxMinionCount = 18;
+    private const float maxRandomOffset = 0.0f;
 
     private void Start()
     {
@@ -31,6 +32,7 @@ public class SpawnManager : MonoBehaviour
                 if (transform.childCount < maxMinionCount)
                 {
                     var offset = spawnOffsets[i % spawnOffsets.Length];
+                    offset += Vector3.forward * Random.Range(-maxRandomOffset, maxRandomOffset);
                     var instance = Instantiate(minion, transform.position + offset, Quaternion.identity);
                     instance.transform.SetParent(transform);
                     var targetCapturePoint = i % spawnOffsets.Length;

@@ -17,7 +17,7 @@ public class UnitController : PathfindingAgent
     internal UnitController target;
     internal HealthBar healthBar;
 
-    private const float meleeAttackRange = 1.0f;
+    private const float meleeAttackRange = 1.5f;
     private const float attackAnimationDuration = 0.3f;
     private const float respawnDelay = 10;
     private float nextAttack = 0;
@@ -118,9 +118,9 @@ public class UnitController : PathfindingAgent
     // Coroutine which adds a delay to the melee attack to simulate the wind up.
     private IEnumerator PerformAttackCoroutine()
     {
+        yield return new WaitForSeconds(attackAnimationDuration);
         if (target != null)
         {
-            yield return new WaitForSeconds(attackAnimationDuration);
             target.TakeDamage(meleeDamage);
             target = null;
             nextAttack = Time.time + attackDelay;
