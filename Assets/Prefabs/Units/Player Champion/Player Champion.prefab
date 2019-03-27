@@ -1572,7 +1572,6 @@ GameObject:
   - component: {fileID: 1532404813}
   - component: {fileID: 1532404812}
   - component: {fileID: 3102530901539797895}
-  - component: {fileID: 6369280711270992640}
   m_Layer: 11
   m_Name: Player Champion
   m_TagString: bluePlayer
@@ -1633,25 +1632,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &6369280711270992640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1532404811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 550a347905a0aefa8a8acff1d7ba7336, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxLinearVelocity: 3
-  hitPoints: 100
-  meleeDamage: 1
-  attackDelay: 1
-  projectile: {fileID: 597860839283275124, guid: 0353f85fdca36ca31a612d92abaaaafd,
-    type: 3}
-  respawns: 0
 --- !u!1 &1532414305
 GameObject:
   m_ObjectHideFlags: 0
