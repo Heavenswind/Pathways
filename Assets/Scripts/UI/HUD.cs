@@ -12,10 +12,25 @@ public class HUD : MonoBehaviour
     [SerializeField] private Text blueTeamProgressLabel = null;
     [SerializeField] private Slider redTeamProgress = null;
     [SerializeField] private Text redTeamProgressLabel = null;
+    [SerializeField] private Text timer = null;
+
+    private float startTime;
 
     void Awake()
     {
         instance = this;
+    }
+
+    void Start()
+    {
+        startTime = Time.time;
+    }
+
+    void Update()
+    {
+        var secs = (Time.time - startTime) % 60;
+        var mins = (Time.time - startTime) / 60;
+        timer.text = string.Format("{0:0}:{1:00}", mins, secs);
     }
 
     public HealthBar CreateHealthBar(UnitController unit)
