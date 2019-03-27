@@ -10,7 +10,7 @@ public class MinionController : UnitController
     private int targetCapturePoint = 0;
     private float aggressionRange = 4;
 
-    private const float capturePointRange = 2.5f;
+    private const float capturePointRange = 2;
 
     void Update()
     {

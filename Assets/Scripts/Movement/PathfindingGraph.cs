@@ -61,11 +61,17 @@ public class PathfindingGraph : MonoBehaviour
     public List<Vector2> ComputePath(Vector2 position, Vector2 target, bool approximate = true)
     {
         // Check target validity
+        var nodePosition = new Vector3(target.x, graphHeight + nodeWidth, target.y);
         if (approximate && Physics.CheckSphere(
-            new Vector3(target.x, graphHeight + nodeWidth, target.y),
+            nodePosition,
             nodeWidth,
-            layerMask: Physics.DefaultRaycastLayers,
-            queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore))
+            Physics.DefaultRaycastLayers,
+            UnityEngine.QueryTriggerInteraction.Ignore)
+        || Physics.Linecast(
+            nodePosition + Vector3.up * 10,
+            nodePosition,
+            levelLayerMask,
+            QueryTriggerInteraction.Ignore))
         {
             target = ClosestNode(target);
         }
@@ -146,11 +152,17 @@ public class PathfindingGraph : MonoBehaviour
         {
             for (float y = bounds.min.z; y <= bounds.max.z; y += nodeDistance)
             {
+                var nodePosition = new Vector3(x, graphHeight + nodeWidth, y);
                 if (!Physics.CheckSphere(
-                    new Vector3(x, graphHeight + nodeWidth, y),
+                    nodePosition,
                     nodeWidth,
-                    layerMask: levelLayerMask,
-                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore))
+                    levelLayerMask,
+                    UnityEngine.QueryTriggerInteraction.Ignore)
+                && !Physics.Linecast(
+                    nodePosition + Vector3.up * 10,
+                    nodePosition,
+                    levelLayerMask,
+                    QueryTriggerInteraction.Ignore))
                 {
                     Vector2 node = new Vector2(x, y);
                     nodes.Add(new Vector2(x, y));
@@ -174,8 +186,8 @@ public class PathfindingGraph : MonoBehaviour
                     new Vector3(node.x, graphHeight + nodeWidth, node.y),
                     new Vector3(neighbor.x, graphHeight + nodeWidth, neighbor.y),
                     nodeWidth,
-                    layerMask: levelLayerMask,
-                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore))
+                    levelLayerMask,
+                    UnityEngine.QueryTriggerInteraction.Ignore))
                 {
                     float distance = Vector2.Distance(node, neighbor);
                     edges[node].Add(neighbor, distance);

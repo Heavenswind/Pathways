@@ -125,8 +125,8 @@ public class PathfindingAgent : MonoBehaviour
                     new Vector3(transform.position.x, graph.graphHeight + graph.nodeWidth, transform.position.z),
                     new Vector3(path[i].x, graph.graphHeight + graph.nodeWidth, path[i].y),
                     graph.nodeWidth,
-                    layerMask: PathfindingGraph.levelLayerMask,
-                    queryTriggerInteraction: UnityEngine.QueryTriggerInteraction.Ignore);
+                    PathfindingGraph.levelLayerMask,
+                    UnityEngine.QueryTriggerInteraction.Ignore);
                 if (pathIsClear || (i == path.Count - 1 && acceptanceRange > 0))
                 {
                     targetIndex = i;

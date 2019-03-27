@@ -26,7 +26,7 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag == "Obstacle")
+        if (collider.tag == "Obstacle" || collider.tag == "Ground")
         {
             Destroy(gameObject);
         }
