@@ -15,7 +15,7 @@ public class SpawnManager : MonoBehaviour
     private const float delayPerSpawnInWave = 0.15f;
     private const int amountPerWave = 6;
     private const int maxMinionCount = 18;
-    private const float maxRandomOffset = 0.0f;
+    private const float maxRandomOffset = 0.5f;
 
     private void Start()
     {
