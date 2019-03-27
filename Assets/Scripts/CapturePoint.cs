@@ -7,7 +7,8 @@ public class CapturePoint : MonoBehaviour
     // State of the capture point
     internal enum CaptureState {Red, Blue, Neutral};
     internal CaptureState status = CaptureState.Neutral;
-    private int redTeam, blueTeam, redNPC, blueNPC = 0;
+    internal int redTeam, blueTeam, redNPC, blueNPC = 0;
+    internal Collider[] units = new Collider[0];
     
     // Score of the capture point
     internal const float minScore = 0f;
@@ -65,12 +66,12 @@ public class CapturePoint : MonoBehaviour
     private void CheckForUnits()
     {
         redTeam = blueTeam = redNPC = blueNPC = 0;
-        Collider[] colliders = Physics.OverlapSphere(
+        units = Physics.OverlapSphere(
             transform.position,
             size.x / 2,
             unitLayerMask,
             QueryTriggerInteraction.Ignore);
-        foreach (Collider collider in colliders)
+        foreach (Collider collider in units)
         {
             switch (collider.tag)
             {
