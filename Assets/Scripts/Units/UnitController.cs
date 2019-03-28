@@ -21,7 +21,7 @@ public class UnitController : PathfindingAgent
     private new Collider collider;
     private Vector3 size;
     private Vector3 spawnPosition;
-    private const float meleeAttackRange = 1.5f;
+    private const float meleeAttackRange = 1;
     private const float respawnDelay = 10;
     private float nextAttack = 0;
     private bool isAttacking = false;

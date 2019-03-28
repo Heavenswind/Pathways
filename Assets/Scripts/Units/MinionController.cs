@@ -14,16 +14,14 @@ public class MinionController : UnitController
 
     void Update()
     {
-        if (target == null)
+        var enemy = FindClosestEnemy();
+        if (enemy != null && enemy != target)
         {
-            if (CheckForEnemies())
-            {
-                Attack(target);
-            }
-            else if (isStill && !ShouldStay())
-            {
-                SetTargetCapturePoint(targetCapturePoint);
-            }
+            Attack(enemy);
+        }
+        else if (isStill && !ShouldStay())
+        {
+            SetTargetCapturePoint(targetCapturePoint);
         }
     }
 
@@ -74,7 +72,7 @@ public class MinionController : UnitController
 
     // Check if there are enemies within the aggression range.
     // If there are, one is target and the unit will move to attack it.
-    private bool CheckForEnemies()
+    private UnitController FindClosestEnemy()
     {
         Collider[] colliders = Physics.OverlapSphere(
             transform.position,
@@ -87,13 +85,13 @@ public class MinionController : UnitController
         {
             if (collider.tag.StartsWith(enemyTeam))
             {
-                target = collider.GetComponent<UnitController>();
-                if (target != null)
+                var enemy = collider.GetComponent<UnitController>();
+                if (enemy != null)
                 {
-                    return true;
+                    return enemy;
                 }
             }
         }
-        return false;
+        return null;
     }
 }

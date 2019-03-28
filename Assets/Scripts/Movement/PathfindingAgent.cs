@@ -93,6 +93,7 @@ public class PathfindingAgent : MonoBehaviour
     // Face the target position.
     public void Face(Vector3 position, Action completionAction = null)
     {
+        if (!activated) return;
         Stop();
         onMovementCompletionAction = completionAction;
         movement = FaceCoroutine(position);
@@ -102,6 +103,7 @@ public class PathfindingAgent : MonoBehaviour
     // Arrive at the target position.
     public void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
     {
+        if (!activated) return;
         Stop();
         movementTargetPosition = position;
         arrivalAcceptanceRange = acceptanceRange;
@@ -113,6 +115,7 @@ public class PathfindingAgent : MonoBehaviour
     // Chase the target.
     public void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
     {
+        if (!activated) return;
         Stop();
         arrivalAcceptanceRange = acceptanceRange;
         onMovementCompletionAction = completionAction;

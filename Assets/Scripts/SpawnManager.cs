@@ -15,9 +15,11 @@ public class SpawnManager : MonoBehaviour
     private const float delayPerSpawnInWave = 0.2f;
     private const int amountPerWave = 9;
     private const int maxMinionCount = 27;
+    private int initialChildCount;
 
     private void Start()
     {
+        initialChildCount = transform.childCount;
         StartCoroutine(SpawnMinions());
     }
 
@@ -28,7 +30,7 @@ public class SpawnManager : MonoBehaviour
         {
             for (int i = 0; i < amountPerWave; ++i)
             {
-                if (transform.childCount < maxMinionCount)
+                if (transform.childCount - initialChildCount < maxMinionCount)
                 {
                     var offset = spawnOffsets[i % spawnOffsets.Length];
                     var instance = Instantiate(minion, transform.position + offset, minion.transform.rotation);
