@@ -86,7 +86,15 @@ public class UnitController : PathfindingAgent
     {
         if (!activated || isAttacking) return;
         this.target = target;
-        Chase(target.transform, size.z + meleeAttackRange, PerformAttack);
+        if (InMeleeAttackRange())
+        {
+            Stop();
+            PerformAttack();
+        }
+        else
+        {
+            Chase(target.transform, MeleeAttackDistance(), PerformAttack);
+        }
     }
 
     // Make the unit fire a projectile towards their forward direction.
@@ -149,6 +157,18 @@ public class UnitController : PathfindingAgent
         animator.SetFloat("health", hitPoints);
         collider.enabled = true;
         activated = true;
+    }
+
+    private float MeleeAttackDistance()
+    {
+        return size.z / 2 + target.size.z / 2 + meleeAttackRange;
+    }
+
+    // Check if the unit is in melee attack range of its target.
+    private bool InMeleeAttackRange()
+    {
+        var distance = Vector3.Distance(transform.position, target.transform.position);
+        return distance <= MeleeAttackDistance();
     }
 
     // Return the team that the unit belongs to by looking at the tag.
