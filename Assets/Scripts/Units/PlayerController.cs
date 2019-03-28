@@ -9,31 +9,31 @@ public class PlayerController : UnitController
         // Poll user input
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Vector2 targetPosition;
+            Vector3 targetPosition;
             if (PlayerTargetPosition(out targetPosition))
             {
-                MoveTo(targetPosition);
+                Arrive(targetPosition);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            Vector2 targetPosition;
+            Vector3 targetPosition;
             if (PlayerTargetPosition(out targetPosition))
             {
-                FireAt(targetPosition);
+                Fire(targetPosition);
             }
         }
     }
 
     // Return the player target position computed from their mouse position.
-    private bool PlayerTargetPosition(out Vector2 targetPosition)
+    private bool PlayerTargetPosition(out Vector3 targetPosition)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         bool targetExists = Physics.Raycast(ray, out hit, Mathf.Infinity,
             layerMask: Physics.DefaultRaycastLayers,
             queryTriggerInteraction: QueryTriggerInteraction.Ignore);
-        targetPosition = new Vector2(hit.point.x, hit.point.z);
+        targetPosition = new Vector3(hit.point.x, 0, hit.point.z);
         return targetExists;
     }
 }

@@ -12,10 +12,9 @@ public class SpawnManager : MonoBehaviour
     internal static bool spawning = true;
     private const float spawnStartDelay = 0;
     private const float spawnRate = 10;
-    private const float delayPerSpawnInWave = 0.15f;
-    private const int amountPerWave = 6;
-    private const int maxMinionCount = 18;
-    private const float maxRandomOffset = 0.5f;
+    private const float delayPerSpawnInWave = 0.2f;
+    private const int amountPerWave = 9;
+    private const int maxMinionCount = 27;
 
     private void Start()
     {
@@ -32,8 +31,7 @@ public class SpawnManager : MonoBehaviour
                 if (transform.childCount < maxMinionCount)
                 {
                     var offset = spawnOffsets[i % spawnOffsets.Length];
-                    offset += Vector3.forward * Random.Range(-maxRandomOffset, maxRandomOffset);
-                    var instance = Instantiate(minion, transform.position + offset, Quaternion.identity);
+                    var instance = Instantiate(minion, transform.position + offset, minion.transform.rotation);
                     instance.transform.SetParent(transform);
                     var targetCapturePoint = i % spawnOffsets.Length;
                     var minionController = instance.GetComponent<MinionController>();

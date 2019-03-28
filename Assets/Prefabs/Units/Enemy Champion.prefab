@@ -2185,6 +2185,7 @@ MonoBehaviour:
   hitPoints: 100
   meleeDamage: 1
   attackDelay: 1
+  attackAnimationDuration: 0.5
   projectile: {fileID: 597860839283275124, guid: 0353f85fdca36ca31a612d92abaaaafd,
     type: 3}
   respawns: 1

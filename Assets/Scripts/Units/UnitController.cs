@@ -8,6 +8,7 @@ public class UnitController : PathfindingAgent
     [SerializeField] internal int hitPoints = 1;
     [SerializeField] private int meleeDamage = 1;
     [SerializeField] private float attackDelay = 1;
+    [SerializeField] private float attackAnimationDuration = 0;
     [SerializeField] private GameObject projectile = null;
     [SerializeField] private bool respawns = false;
 
@@ -17,13 +18,13 @@ public class UnitController : PathfindingAgent
     internal UnitController target;
     internal HealthBar healthBar;
 
-    private const float meleeAttackRange = 1.5f;
-    private const float attackAnimationDuration = 0.3f;
-    private const float respawnDelay = 10;
-    private float nextAttack = 0;
+    private new Collider collider;
     private Vector3 size;
     private Vector3 spawnPosition;
-    private new Collider collider;
+    private const float meleeAttackRange = 1.5f;
+    private const float respawnDelay = 10;
+    private float nextAttack = 0;
+    private bool isAttacking = false;
 
     protected override void Awake()
     {
@@ -34,8 +35,9 @@ public class UnitController : PathfindingAgent
         size = collider.bounds.size;
     }
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         healthBar = HUD.instance.CreateHealthBar(this);
         spawnPosition = transform.position;
     }
@@ -73,18 +75,18 @@ public class UnitController : PathfindingAgent
     }
 
     // Make the unit fire a projectile toward the target position.
-    public void FireAt(Vector2 targetPosition)
+    public void Fire(Vector3 position)
     {
-        if (!activated) return;
-        RotateTowards(targetPosition, FireForward);
+        if (!activated || isAttacking) return;
+        Face(position, FireForward);
     }
 
     // Make the unit attack the target enemy in melee range.
-    public void Attack(UnitController targetEnemy)
+    public void Attack(UnitController target)
     {
-        if (!activated) return;
-        target = targetEnemy;
-        MoveTo(targetEnemy.transform.position, size.z + meleeAttackRange, PerformAttack);
+        if (!activated || isAttacking) return;
+        this.target = target;
+        Chase(target.transform, size.z + meleeAttackRange, PerformAttack);
     }
 
     // Make the unit fire a projectile towards their forward direction.
@@ -92,11 +94,9 @@ public class UnitController : PathfindingAgent
     {
         if (Time.time >= nextAttack)
         {
-            StartCoroutine(AnimateAttack());
-            var offset = (Vector3.up * size.y * 0.5f) + (transform.forward * size.z / 2);
-            var instance = Instantiate(projectile, transform.position + offset, transform.rotation);
-            instance.GetComponent<Projectile>().target = enemyTeam;
+            isAttacking = true;
             nextAttack = Time.time + attackDelay;
+            StartCoroutine(FireForwardCoroutine());
         }
     }
 
@@ -106,7 +106,8 @@ public class UnitController : PathfindingAgent
     {
         if (Time.time >= nextAttack)
         {
-            StartCoroutine(AnimateAttack());
+            isAttacking = true;
+            nextAttack = Time.time + attackDelay;
             StartCoroutine(PerformAttackCoroutine());
         }
         else
@@ -115,24 +116,28 @@ public class UnitController : PathfindingAgent
         }
     }
 
+    // Coroutine which adds a delay to the range attack to simualte the wind up.
+    private IEnumerator FireForwardCoroutine()
+    {
+        animator.Play("Attack");
+        yield return new WaitForSeconds(attackAnimationDuration);
+        var offset = (Vector3.up * size.y * 0.5f) + (transform.forward * size.z / 2);
+        var instance = Instantiate(projectile, transform.position + offset, transform.rotation);
+        instance.GetComponent<Projectile>().target = enemyTeam;
+        isAttacking = false;
+    }
+
     // Coroutine which adds a delay to the melee attack to simulate the wind up.
     private IEnumerator PerformAttackCoroutine()
     {
+        animator.Play("Attack");
         yield return new WaitForSeconds(attackAnimationDuration);
         if (target != null)
         {
             target.TakeDamage(meleeDamage);
             target = null;
-            nextAttack = Time.time + attackDelay;
         }
-    }
-
-    // Coroutine which sets the attacking parameter of the animator to true for a brief duration.
-    private IEnumerator AnimateAttack()
-    {
-        animator.SetBool("attacking", true);
-        yield return new WaitForSeconds(attackAnimationDuration);
-        animator.SetBool("attacking", false);
+        isAttacking = false;
     }
 
     // Make the unit respawn after the given delay.

@@ -8,6 +8,8 @@ using UnityEngine;
 // It is used to perform agent pathfinding through the level.
 public class PathfindingGraph : MonoBehaviour
 {
+    public static PathfindingGraph instance;
+    
     [SerializeField] internal float nodeDistance = 1.0f; // distance at which nodes are placed
     [SerializeField] internal float nodeWidth = 1.0f; // clearance width required for placing a node
     [SerializeField] internal float graphHeight = 0.0f; // height at which the graph performs checks
@@ -24,6 +26,11 @@ public class PathfindingGraph : MonoBehaviour
         = new Dictionary<Vector2, Dictionary<Vector2, float>>();
 
     private Bounds bounds; // bounds of the level, equal to the bounds of the ground plane
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     // Initialize the pathfinding graph.
     void Start()
@@ -58,11 +65,17 @@ public class PathfindingGraph : MonoBehaviour
     // It uses the Euclidean distance as the heuristic.
     // The approximate flag allows the character to move the the nearest node if the target position
     // is obstructed.
-    public List<Vector2> ComputePath(Vector2 position, Vector2 target, bool approximate = true)
+    public List<Vector2> ComputePath(
+        Vector3 worldPosition,
+        Vector3 worldTarget,
+        bool approximateNode = true)
     {
+        Vector2 position = new Vector2(worldPosition.x, worldPosition.z);
+        Vector2 target = new Vector2(worldTarget.x, worldTarget.z);
+        
         // Check target validity
         var nodePosition = new Vector3(target.x, graphHeight + nodeWidth, target.y);
-        if (approximate && Physics.CheckSphere(
+        if (approximateNode && (Physics.CheckSphere(
             nodePosition,
             nodeWidth,
             Physics.DefaultRaycastLayers,
@@ -71,7 +84,7 @@ public class PathfindingGraph : MonoBehaviour
             nodePosition + Vector3.up * 10,
             nodePosition,
             levelLayerMask,
-            QueryTriggerInteraction.Ignore))
+            QueryTriggerInteraction.Ignore)))
         {
             target = ClosestNode(target);
         }

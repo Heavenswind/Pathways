@@ -8,9 +8,9 @@ public class MinionController : UnitController
 {
     internal SpawnManager manager;
     private int targetCapturePoint = 0;
-    private float aggressionRange = 4;
+    private float aggressionRange = 5;
 
-    private const float capturePointRange = 2;
+    private const float capturePointRange = 4;
 
     void Update()
     {
@@ -20,7 +20,7 @@ public class MinionController : UnitController
             {
                 Attack(target);
             }
-            else if (isStill)
+            else if (isStill && !ShouldStay())
             {
                 SetTargetCapturePoint(targetCapturePoint);
             }
@@ -39,7 +39,21 @@ public class MinionController : UnitController
     {
         targetCapturePoint = capturePointIndex;
         var capturePoint = manager.capturesPoints[targetCapturePoint];
-        MoveTo(capturePoint.position, capturePointRange, OnEnterCapturePoint);
+        Arrive(capturePoint.position, capturePointRange, OnEnterCapturePoint);
+    }
+
+    // Check if the minion should stay where it is.
+    // This checks if it is on its target capture point and if the capture point
+    // is owned.
+    private bool ShouldStay()
+    {
+        var capturePoint = manager.capturesPoints[targetCapturePoint].GetComponent<CapturePoint>();
+        var distance = Vector3.Distance(transform.position, capturePoint.transform.position);
+        if (distance <= capturePointRange && !capturePoint.IsOwnedByTeam(team))
+        {
+            return true;
+        }
+        return false;
     }
 
     // Callback called when the minion enters its target capture point.
