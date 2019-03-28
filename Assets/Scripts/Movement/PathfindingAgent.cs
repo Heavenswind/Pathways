@@ -178,7 +178,7 @@ public class PathfindingAgent : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(
                 transform.rotation,
                 Quaternion.LookRotation(direction, Vector3.up),
-                maxAngularVelocity);
+                maxAngularVelocity * Time.timeScale);
         }
         return transform.forward == direction;
     }

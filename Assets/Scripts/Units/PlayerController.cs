@@ -7,20 +7,23 @@ public class PlayerController : UnitController
     void Update()
     {
         // Poll user input
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Time.timeScale != 0)
         {
-            Vector3 targetPosition;
-            if (PlayerTargetPosition(out targetPosition))
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                Arrive(targetPosition);
+                Vector3 targetPosition;
+                if (PlayerTargetPosition(out targetPosition))
+                {
+                    Arrive(targetPosition);
+                }
             }
-        }
-        else if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            Vector3 targetPosition;
-            if (PlayerTargetPosition(out targetPosition))
+            else if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                Fire(targetPosition);
+                Vector3 targetPosition;
+                if (PlayerTargetPosition(out targetPosition))
+                {
+                    Fire(targetPosition);
+                }
             }
         }
     }

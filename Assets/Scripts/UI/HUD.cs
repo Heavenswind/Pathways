@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
@@ -13,24 +14,41 @@ public class HUD : MonoBehaviour
     [SerializeField] private Slider redTeamProgress = null;
     [SerializeField] private Text redTeamProgressLabel = null;
     [SerializeField] private Text timer = null;
-
-    private float startTime;
+    [SerializeField] private CanvasGroup pauseMenu = null;
 
     void Awake()
     {
         instance = this;
     }
 
-    void Start()
-    {
-        startTime = Time.time;
-    }
-
     void Update()
     {
-        var secs = (Time.time - startTime) % 60;
-        var mins = (Time.time - startTime) / 60;
+        // Poll user input
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+
+        // Update timer
+        var secs = Time.timeSinceLevelLoad % 60;
+        var mins = Time.timeSinceLevelLoad / 60;
         timer.text = string.Format("{0:0}:{1:00}", mins, secs);
+    }
+
+    public void TogglePause()
+    {
+        ToggleScreen(pauseMenu);
+    }
+
+    public void LoadScene(int sceneIndex)
+    {
+        TogglePause();
+        SceneManager.LoadScene(sceneIndex);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     public HealthBar CreateHealthBar(UnitController unit)
@@ -51,5 +69,14 @@ public class HUD : MonoBehaviour
         blueTeamProgressLabel.text = string.Format("Blue team progress ({0}%)", Mathf.Round(blue * 100));
         redTeamProgress.value = red;
         redTeamProgressLabel.text = string.Format("Red team progress ({0}%)", Mathf.Round(red * 100));
+    }
+
+    private void ToggleScreen(CanvasGroup screen)
+    {
+        var shown = !(screen.alpha == 0);
+        shown = !shown;
+        screen.alpha = shown? 1 : 0;
+        screen.interactable = shown;
+        Time.timeScale = shown? 0 : 1;
     }
 }
