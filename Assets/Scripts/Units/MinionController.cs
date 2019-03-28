@@ -10,7 +10,7 @@ public class MinionController : UnitController
     private int targetCapturePoint = 0;
     private float aggressionRange = 5;
 
-    private const float capturePointRange = 4;
+    private const float capturePointRange = 5;
 
     void Update()
     {
@@ -19,9 +19,13 @@ public class MinionController : UnitController
         {
             Attack(enemy);
         }
-        else if (isStill && !ShouldStay())
+        else if (isStill && (!InRangeOfPoint() || TargetPointIsCaptured()))
         {
             SetTargetCapturePoint(targetCapturePoint);
+        }
+        else if (InRangeOfPoint() && TargetPointIsCaptured())
+        {
+            SetTargetCapturePoint(manager.transitions[targetCapturePoint]);
         }
     }
 
@@ -40,14 +44,28 @@ public class MinionController : UnitController
         Arrive(capturePoint.position, capturePointRange, OnEnterCapturePoint);
     }
 
+    // Check if the minion is in range of its target capture point.
+    private bool InRangeOfPoint()
+    {
+        var capturePoint = manager.capturesPoints[targetCapturePoint];
+        var distance = Vector3.Distance(transform.position, capturePoint.transform.position);
+        return distance <= capturePointRange;
+    }
+
+    // Check if the target capture point is captured.
+    private bool TargetPointIsCaptured()
+    {
+        var capturePoint = manager.capturesPoints[targetCapturePoint].GetComponent<CapturePoint>();
+        return capturePoint != null && capturePoint.IsOwnedByTeam(team);
+    }
+
     // Check if the minion should stay where it is.
     // This checks if it is on its target capture point and if the capture point
     // is owned.
     private bool ShouldStay()
     {
         var capturePoint = manager.capturesPoints[targetCapturePoint].GetComponent<CapturePoint>();
-        var distance = Vector3.Distance(transform.position, capturePoint.transform.position);
-        if (distance <= capturePointRange && !capturePoint.IsOwnedByTeam(team))
+        if (capturePoint != null && InRangeOfPoint() && !capturePoint.IsOwnedByTeam(team))
         {
             return true;
         }
@@ -63,8 +81,7 @@ public class MinionController : UnitController
             TakeDamage(hitPoints);
             return;
         }
-        var capturePoint = manager.capturesPoints[targetCapturePoint].GetComponent<CapturePoint>();
-        if (capturePoint.IsOwnedByTeam(team))
+        if (TargetPointIsCaptured())
         {
             SetTargetCapturePoint(manager.transitions[targetCapturePoint]);
         }

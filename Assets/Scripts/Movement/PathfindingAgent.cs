@@ -141,7 +141,7 @@ public class PathfindingAgent : MonoBehaviour
                 PathfindingGraph.instance.nodeWidth,
                 PathfindingGraph.levelLayerMask,
                 UnityEngine.QueryTriggerInteraction.Ignore);
-            if (pathIsClear || (i == path.Count - 1 && arrivalAcceptanceRange > 0))
+            if (pathIsClear || Vector2.Distance(path[i], path.Last()) <= arrivalAcceptanceRange)
             {
                 targetNodeIndex = i;
             }
