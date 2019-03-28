@@ -6,12 +6,16 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance = null;
 
+    [Header("Structures")]
     [SerializeField] internal GameObject blueBase = null;
     [SerializeField] internal GameObject redBase = null;
     [SerializeField] internal Transform blueTower = null;
     [SerializeField] internal Transform redTower = null;
+    
+    [Header("Win Condition")]
     [SerializeField] private float scoreToWin = 100;
     [SerializeField] private float scoreRatePerPoint = 0.01f;
+    
     internal Color blueColor;
     internal Color redColor;
     internal bool gameEnded = false;

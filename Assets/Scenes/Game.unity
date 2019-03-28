@@ -2736,7 +2736,7 @@ MonoBehaviour:
   redBase: {fileID: 1619142923}
   blueTower: {fileID: 212696029}
   redTower: {fileID: 529955975}
-  scoreToWin: 1
+  scoreToWin: 100
   scoreRatePerPoint: 0.002
 --- !u!114 &679105128
 MonoBehaviour:
