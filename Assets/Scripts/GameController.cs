@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
 
     [SerializeField] internal GameObject blueBase = null;
     [SerializeField] internal GameObject redBase = null;
+    [SerializeField] internal Transform blueTower = null;
+    [SerializeField] internal Transform redTower = null;
     [SerializeField] private float scoreToWin = 100;
     [SerializeField] private float scoreRatePerPoint = 0.01f;
     internal Color blueColor;

@@ -2195,6 +2195,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blueBase: {fileID: 384285592}
   redBase: {fileID: 1619142923}
+  blueTower: {fileID: 212696029}
+  redTower: {fileID: 529955975}
   scoreToWin: 100
   scoreRatePerPoint: 0.002
 --- !u!1 &694369214

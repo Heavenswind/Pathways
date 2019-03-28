@@ -28,6 +28,7 @@ public class CapturePoint : MonoBehaviour
     private Color neutralColor;
     private Color blueColor;
     private Color redColor;
+    private Transform tower;
 
     void Awake()
     {
@@ -36,6 +37,7 @@ public class CapturePoint : MonoBehaviour
         unitLayerMask = LayerMask.GetMask("Units");
         renderer = GetComponent<Renderer>();
         neutralColor = renderer.material.color;
+        tower = transform.GetChild(0);
     }
 
     void Start()
@@ -49,6 +51,7 @@ public class CapturePoint : MonoBehaviour
         CheckForUnits();
         UpdateScore();
         UpdateColor();
+        UpdateTowerOrientation();
     }
 
     // Check if the capture point is owned by the given team name.
@@ -99,7 +102,8 @@ public class CapturePoint : MonoBehaviour
         }
     }
 
-    // Update visual affinity of capture point. Point will gradually change to the teams color as it is closer to "capturing it".
+    // Update visual affinity of capture point. Point will gradually change to
+    // the teams color as it is closer to "capturing it".
     private void UpdateColor()
     {
         if (score >= medianScore)
@@ -112,5 +116,17 @@ public class CapturePoint : MonoBehaviour
             //Color adjusts between netural and red
             renderer.material.color = Color.Lerp(redColor, neutralColor, score / (maxScore / 2));
         }
+    }
+
+    // Update the capture tower rotation. The rotation is linearly interpolated
+    // based on the capture point score.
+    private void UpdateTowerOrientation()
+    {
+        var groundPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        tower.transform.rotation = Quaternion.Lerp(
+            Quaternion.LookRotation(groundPosition - GameController.instance.redTower.position),
+            Quaternion.LookRotation(groundPosition - GameController.instance.blueTower.position),
+            score / maxScore
+        );
     }
 }
