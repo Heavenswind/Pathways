@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 204146561}
   - component: {fileID: 204146560}
   m_Layer: 5
-  m_Name: Paused Text
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

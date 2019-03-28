@@ -78,7 +78,7 @@ public class MinionController : UnitController
         if (targetCapturePoint == manager.capturesPoints.Length - 1)
         {
             Stop();
-            TakeDamage(hitPoints);
+            Kill();
             return;
         }
         if (TargetPointIsCaptured())

@@ -74,6 +74,12 @@ public class UnitController : PathfindingAgent
         }
     }
 
+    // Instantly kill the target.
+    public void Kill()
+    {
+        TakeDamage(hitPoints);
+    }
+
     // Make the unit fire a projectile toward the target position.
     public void Fire(Vector3 position)
     {

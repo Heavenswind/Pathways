@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private float scoreRatePerPoint = 0.01f;
     internal Color blueColor;
     internal Color redColor;
+    internal bool gameEnded = false;
 
     private CapturePoint[] capturePoints;
     private float blueScore = 0;
@@ -29,6 +30,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        if (gameEnded) return;
         foreach (CapturePoint capturePoint in capturePoints)
         {
             var pointScore = (capturePoint.score - CapturePoint.medianScore)
@@ -43,5 +45,31 @@ public class GameController : MonoBehaviour
             }
         }
         HUD.instance.SetProgress(blueScore / scoreToWin, redScore / scoreToWin);
+        CheckWin();
+    }
+
+    private void CheckWin()
+    {
+        if (blueScore >= scoreToWin) StartCoroutine(EndGame("blue"));
+        else if (redScore >= scoreToWin) StartCoroutine(EndGame("red"));
+    }
+
+    private IEnumerator EndGame(string winningTeam)
+    {
+        gameEnded = true;
+        SpawnManager.spawning = false;
+        foreach (UnitController unit in Object.FindObjectsOfType<UnitController>())
+        {
+            if (!unit.tag.StartsWith(winningTeam))
+            {
+                unit.Kill();
+            }
+            else
+            {
+                unit.Disable();
+            }
+        }
+        yield return new WaitForSeconds(4);
+        HUD.instance.EndGame((winningTeam == "blue")? true : false);
     }
 }
