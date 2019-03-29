@@ -21,6 +21,7 @@ public class SpawnManager : MonoBehaviour
     {
         initialChildCount = transform.childCount;
         StartCoroutine(SpawnMinions());
+
     }
 
     private IEnumerator SpawnMinions()
