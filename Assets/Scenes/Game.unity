@@ -1936,6 +1936,11 @@ PrefabInstance:
       propertyPath: capturesPoints.Array.data[4]
       value: 
       objectReference: {fileID: 2035369137}
+    - target: {fileID: 249590048747853179, guid: c7f6dba7be4fe63409ea65979ba53819,
+        type: 3}
+      propertyPath: cp
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7f6dba7be4fe63409ea65979ba53819, type: 3}
 --- !u!1001 &506669442
@@ -4169,6 +4174,11 @@ PrefabInstance:
       propertyPath: capturesPoints.Array.data[4]
       value: 
       objectReference: {fileID: 2035369137}
+    - target: {fileID: 249590048747853179, guid: c7f6dba7be4fe63409ea65979ba53819,
+        type: 3}
+      propertyPath: cp
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7f6dba7be4fe63409ea65979ba53819, type: 3}
 --- !u!1 &1044281202
