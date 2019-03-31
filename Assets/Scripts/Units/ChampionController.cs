@@ -16,8 +16,11 @@ public class ChampionController : UnitController
     private float minThreatLvl = 0;
     private float maxThreatLvl = 10;
 
+    //Initial position
+    Vector3 initialPosition;
+
     //Range distances
-    private float aggressionRange = 5;
+    private float aggressionRange = 8;
     private float threatRange = 10;
     private const float capturePointRange = 5;
     private float collabDistance = 10;
@@ -31,20 +34,24 @@ public class ChampionController : UnitController
         base.Start();
         capturesPoints = FindObjectsOfType<CapturePoint>();
         targetCapturePoint = getClosestCapturePointOfInterest();
+        initialPosition = transform.position;
     }
 
     void Update()
     {
-        //Get the closest enemy to us if we see one.
-        var enemy = FindClosestEnemy();
-        if (enemy != null && enemy != target)
-        {
-            Attack(enemy);
-        }
-
         //As long as we are not in danger...
         if (!inDanger())
         {
+            //Get the closest enemy to us if we see one.
+            var enemy = FindClosestEnemy();
+            if (enemy != null && enemy != target)
+            {
+                if (Vector3.Distance(enemy.transform.position, transform.position) <= (aggressionRange / 2.0f))
+                    Attack(enemy);
+                else
+                    Fire(enemy.transform.position);
+            }
+
             //If im not moving and either im not in range of my target or the target point is captured, go to the capture point
             if (isStill && (!InRangeOfPoint() || TargetPointIsCaptured()))
             {
@@ -59,6 +66,7 @@ public class ChampionController : UnitController
         }
         else
         {
+            print(gameObject.name + " is in danger, returning to base");
             //Michael Jordan: Stop it. Get some help
             GetHelpOnPoint();
         }
@@ -72,7 +80,7 @@ public class ChampionController : UnitController
     //Returns if its in danger.
     bool inDanger()
     {
-        return threatLvl >= dangerLevel;
+        return threatLvl >= dangerLevel || hitPoints <= (totalHitPoints / 3.0f);
     }
 
     void OnDrawGizmos()
@@ -132,10 +140,14 @@ public class ChampionController : UnitController
         {
             ally.SetTargetCapturePoint(targetCapturePoint);
         }
-        // Go to the closest and safest point.
+        // Go to the base to heal.
         else
         {
-            targetCapturePoint = getClosestSafetyPoint();
+            Arrive(initialPosition, capturePointRange);
+            if(Vector3.Distance(transform.position, initialPosition) <= 1)
+            {
+                hitPoints = totalHitPoints;
+            }
         }
     }
 
@@ -175,22 +187,22 @@ public class ChampionController : UnitController
     //Can be put in with closest enemy method but for now we can leave it like this.
     void calculateThreatLevel()
     {
-        Collider[] colliders = Physics.OverlapSphere(
+        if(threatLvl > minThreatLvl && threatLvl < maxThreatLvl)
+        {
+            Collider[] colliders = Physics.OverlapSphere(
             transform.position,
             threatRange,
             LayerMask.GetMask("Units"),
             QueryTriggerInteraction.Ignore);
-        if(colliders.Length <= 1)
-        {
-            threatLvl = -5;
-        }
-        else
-        {
-            var orderedColliders = colliders.OrderBy(
-            collider => Vector3.Distance(collider.transform.position, transform.position));
-            foreach (Collider collider in orderedColliders)
+            if (colliders.Length <= 1)
             {
-                if (threatLvl < maxThreatLvl)
+                threatLvl = -5;
+            }
+            else
+            {
+                var orderedColliders = colliders.OrderBy(
+                collider => Vector3.Distance(collider.transform.position, transform.position));
+                foreach (Collider collider in orderedColliders)
                 {
                     if (collider.tag.StartsWith(enemyTeam))
                     {
@@ -204,9 +216,6 @@ public class ChampionController : UnitController
                             threatLvl += 5;
                         }
                     }
-                }
-                if(threatLvl > minThreatLvl)
-                {
                     if (collider.tag.StartsWith(team))
                     {
                         var ally = collider.GetComponent<UnitController>();
@@ -217,12 +226,12 @@ public class ChampionController : UnitController
                         else if (ally != null && ally.GetComponent<ChampionController>())
                         {
                             threatLvl -= 5;
+
                         }
                     }
                 }
             }
-        }
-        
+        }   
     }
 
     private UnitController FindClosestEnemy()
@@ -232,6 +241,20 @@ public class ChampionController : UnitController
             aggressionRange,
             LayerMask.GetMask("Units"),
             QueryTriggerInteraction.Ignore);
+
+        //Check to see if there is a player around first.
+        foreach (Collider collider in colliders)
+        {
+            if (collider.tag == "bluePlayer")
+            {
+                var enemy = collider.GetComponent<UnitController>();
+                if (enemy != null)
+                {
+                    return enemy;
+                }
+            }
+        }
+
         var orderedColliders = colliders.OrderBy(
             collider => Vector3.Distance(collider.transform.position, transform.position));
         foreach (Collider collider in orderedColliders)
