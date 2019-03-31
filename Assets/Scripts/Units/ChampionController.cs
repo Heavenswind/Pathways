@@ -6,76 +6,136 @@ using UnityEngine;
 
 public class ChampionController : UnitController
 {
+    //Capturepoint data.
     public CapturePoint[] capturesPoints;
-    private int targetCapturePoint = 0;
-    private const float capturePointRange = 5;
-    private float aggressionRange = 6;
-    public CapturePoint cp = null;
-    int capturePointOfInterest = 0;
+    private int targetCapturePoint;
 
+    //Variables for threat logic
     public float threatLvl = 0;
-    public float dangerLevel = 6;
-    public float minThreatLvl = 0;
-    public float maxThreatLvl = 10;
+    private float dangerLevel = 6;
+    private float minThreatLvl = 0;
+    private float maxThreatLvl = 10;
 
-    private float threatRange = 5;
+    //Range distances
+    private float aggressionRange = 5;
+    private float threatRange = 10;
+    private const float capturePointRange = 5;
+    private float collabDistance = 10;
+
+    //Ally gameobject reference
     public ChampionController ally;
+
+    //On start, get a reference to all capture points and set a target.
+    new void Start()
+    {
+        base.Start();
+        capturesPoints = FindObjectsOfType<CapturePoint>();
+        targetCapturePoint = getClosestCapturePointOfInterest();
+    }
 
     void Update()
     {
+        //Get the closest enemy to us if we see one.
         var enemy = FindClosestEnemy();
         if (enemy != null && enemy != target)
         {
             Attack(enemy);
         }
-        if (threatLvl < dangerLevel && cp == null)
+
+        //As long as we are not in danger...
+        if (!inDanger())
         {
-            targetCapturePoint = getClosestCapturePointOfInterest();
-            cp = capturesPoints[getClosestCapturePointOfInterest()];
+            //If im not moving and either im not in range of my target or the target point is captured, go to the capture point
+            if (isStill && (!InRangeOfPoint() || TargetPointIsCaptured()))
+            {
+                SetTargetCapturePoint(targetCapturePoint);
+            }
+            //else if im in range and the target point is captured, get a new capture point.
+            else if (InRangeOfPoint() && TargetPointIsCaptured())
+            {
+                targetCapturePoint = getClosestCapturePointOfInterest();
+                SetTargetCapturePoint(targetCapturePoint);
+            }
         }
-        else if(threatLvl >= dangerLevel)
+        else
         {
-            AskForHelp();
+            //Michael Jordan: Stop it. Get some help
+            GetHelpOnPoint();
         }
-        else if (isStill && (!InRangeOfPoint() || TargetPointIsCaptured()))
-        {
-            SetTargetCapturePoint(targetCapturePoint);
-        }
-        else if (InRangeOfPoint() && TargetPointIsCaptured())
-        {
-            cp = null;
-            SetTargetCapturePoint(targetCapturePoint);
-        }
+        
     }
     private void FixedUpdate()
     {
         calculateThreatLevel();
     }
 
+    //Returns if its in danger.
+    bool inDanger()
+    {
+        return threatLvl >= dangerLevel;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, aggressionRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, threatRange);
+    }
+
+    //Gets the closest point of interest based on neutrality or enemy capture.
     int getClosestCapturePointOfInterest()
     {
         float shortestDistance = Mathf.Infinity;
+        int bestPoint = 0;
         for (int i = 0; i < capturesPoints.Length; i++)
         {
-            print("Shortest distance: " + shortestDistance);
-            if(!capturesPoints[i].IsOwnedByTeam(team) && capturesPoints[i] != ally.cp)
+            if(!capturesPoints[i].IsOwnedByTeam(team) && i != ally.targetCapturePoint)
             {
                 float distanceToPoint = Vector3.Distance(transform.position, capturesPoints[i].transform.position);
                 if(distanceToPoint < shortestDistance)
                 {
                     shortestDistance = distanceToPoint;
-                    capturePointOfInterest = i;
+                    bestPoint = i;
                 }
             }
         }
-        return capturePointOfInterest;
+        print(gameObject.name +  " thinks that the Shortest distance is: " + shortestDistance + " to point " + bestPoint);
+        return bestPoint;
     }
-
-    public void AskForHelp()
+    //Calculates the closest and safest point based on distance and number of ally units on that point.
+    int getClosestSafetyPoint()
     {
-        if(ally != null)
+        float shortestDistance = Mathf.Infinity;
+        int bestPoint = targetCapturePoint;
+        for (int i = 0; i < capturesPoints.Length; i++)
+        {
+            if (capturesPoints[i].IsOwnedByTeam(team) && capturesPoints[i].redTeam > capturesPoints[i].blueTeam)
+            {
+                float distanceToPoint = Vector3.Distance(transform.position, capturesPoints[i].transform.position);
+                if (distanceToPoint < shortestDistance)
+                {
+                    shortestDistance = distanceToPoint;
+                    bestPoint = i;
+                }
+            }
+        }
+        print(gameObject.name + " thinks that the safest point is: " + bestPoint + " with red: " + capturesPoints[bestPoint].redTeam + " vs blue: " + capturesPoints[bestPoint].blueTeam);
+        return bestPoint;
+    }
+    
+    // Ask ally to help on the point
+    public void GetHelpOnPoint()
+    {
+        // If not to far, make ally come to the point
+        if (ally != null && Vector3.Distance(transform.position, ally.transform.position) <= collabDistance)
         {
             ally.SetTargetCapturePoint(targetCapturePoint);
+        }
+        // Go to the closest and safest point.
+        else
+        {
+            targetCapturePoint = getClosestSafetyPoint();
         }
     }
 
@@ -99,12 +159,6 @@ public class ChampionController : UnitController
     // Callback called when the minion enters its target capture point.
     private void OnEnterCapturePoint()
     {
-        if (targetCapturePoint == capturesPoints.Length - 1)
-        {
-            Stop();
-            Kill();
-            return;
-        }
         if (TargetPointIsCaptured())
         {
             SetTargetCapturePoint(getClosestCapturePointOfInterest());
@@ -117,7 +171,8 @@ public class ChampionController : UnitController
         return capturePoint != null && capturePoint.IsOwnedByTeam(team);
     }
 
-
+    //Calculates the threat level by counting ally units vs enemy units, when there is no threat, lvl is -5
+    //Can be put in with closest enemy method but for now we can leave it like this.
     void calculateThreatLevel()
     {
         Collider[] colliders = Physics.OverlapSphere(
@@ -127,7 +182,7 @@ public class ChampionController : UnitController
             QueryTriggerInteraction.Ignore);
         if(colliders.Length <= 1)
         {
-            threatLvl = 0;
+            threatLvl = -5;
         }
         else
         {
