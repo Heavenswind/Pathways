@@ -28,6 +28,7 @@ public class PathfindingAgent : MonoBehaviour
     private Action onMovementCompletionAction; // action performed after completing a movement coroutine
     private const float pathRecalculationThreshold = 1;
     private string[] ignoredColliders = new string[]{"Ground", "capturePoint"};
+    private bool avoid = false;
 
     public bool isStill
     {
@@ -55,6 +56,14 @@ public class PathfindingAgent : MonoBehaviour
                 && Vector3.Distance(transform.position, movementTargetPosition.Value) < arrivalAcceptanceRange)
             {
                 Stop(true);
+            }
+            else
+            {
+                var agent = hit.gameObject.GetComponent<PathfindingAgent>();
+                if (agent != null && (agent.isStill || agent.velocity.magnitude < velocity.magnitude))
+                {
+                    avoid = true;
+                }
             }
         }
     }
@@ -165,6 +174,11 @@ public class PathfindingAgent : MonoBehaviour
     private void SetVelocity(Vector3 velocity)
     {
         this.velocity = velocity;
+        if (avoid)
+        {
+            this.velocity += transform.right;
+            avoid = false;
+        }
         animator.SetFloat("speed", velocity.magnitude);
     }
 
@@ -216,11 +230,10 @@ public class PathfindingAgent : MonoBehaviour
     // Make the agent rotate toward the given target position.
     private IEnumerator FaceCoroutine(Vector3 position)
     {
-        do
+        while (!RotateToward(position))
         {
             yield return null;
         }
-        while (!RotateToward(position));
         Stop(true);
     }
 
@@ -237,10 +250,17 @@ public class PathfindingAgent : MonoBehaviour
             (targetNodeIndex, targetNodePosition) = SmoothPath(path, targetNodeIndex);
             RotateToward(targetNodePosition);
             arrived = MoveToward(targetNodePosition, true);
-            if (arrived && targetNodeIndex < path.Count - 2)
+            if (arrived)
             {
-                ++targetNodeIndex;
-                arrived = false;
+                if (targetNodeIndex == path.Count - 1)
+                {
+                    break;
+                }
+                else
+                {
+                    ++targetNodeIndex;
+                    arrived = false;
+                }
             }
             yield return null;
         }

@@ -40,14 +40,14 @@ public class MinionController : UnitController
     public void SetTargetCapturePoint(int capturePointIndex)
     {
         targetCapturePoint = capturePointIndex;
-        var capturePoint = manager.capturesPoints[targetCapturePoint];
+        var capturePoint = manager.capturePoints[targetCapturePoint];
         Arrive(capturePoint.position, capturePointRange, OnEnterCapturePoint);
     }
 
     // Check if the minion is in range of its target capture point.
     private bool InRangeOfPoint()
     {
-        var capturePoint = manager.capturesPoints[targetCapturePoint];
+        var capturePoint = manager.capturePoints[targetCapturePoint];
         var distance = Vector3.Distance(transform.position, capturePoint.transform.position);
         return distance <= capturePointRange;
     }
@@ -55,7 +55,7 @@ public class MinionController : UnitController
     // Check if the target capture point is captured.
     private bool TargetPointIsCaptured()
     {
-        var capturePoint = manager.capturesPoints[targetCapturePoint].GetComponent<CapturePoint>();
+        var capturePoint = manager.capturePoints[targetCapturePoint].GetComponent<CapturePoint>();
         return capturePoint != null && capturePoint.IsOwnedByTeam(team);
     }
 
@@ -64,7 +64,7 @@ public class MinionController : UnitController
     // is owned.
     private bool ShouldStay()
     {
-        var capturePoint = manager.capturesPoints[targetCapturePoint].GetComponent<CapturePoint>();
+        var capturePoint = manager.capturePoints[targetCapturePoint].GetComponent<CapturePoint>();
         if (capturePoint != null && InRangeOfPoint() && !capturePoint.IsOwnedByTeam(team))
         {
             return true;
@@ -75,7 +75,7 @@ public class MinionController : UnitController
     // Callback called when the minion enters its target capture point.
     private void OnEnterCapturePoint()
     {
-        if (targetCapturePoint == manager.capturesPoints.Length - 1)
+        if (targetCapturePoint == manager.capturePoints.Length - 1)
         {
             Stop();
             Kill();

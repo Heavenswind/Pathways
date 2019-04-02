@@ -1354,6 +1354,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
         type: 3}
+      propertyPath: capturePoints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
       propertyPath: transitions.Array.data[0]
       value: 3
       objectReference: {fileID: 0}
@@ -1449,6 +1454,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8709035193177651117, guid: c7f6dba7be4fe63409ea65979ba53819,
         type: 3}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1889235291}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[5]
+      value: 
+      objectReference: {fileID: 667655054}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[4]
+      value: 
+      objectReference: {fileID: 1819538805}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 30144544}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 1474126}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 923635461}
     - target: {fileID: 2510208131679812498, guid: 62dddad955a5b027ea4eb2c533ca389b,
         type: 3}
       propertyPath: m_LocalRotation.y
@@ -8318,6 +8353,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
         type: 3}
+      propertyPath: capturePoints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
       propertyPath: capturesPoints.Array.data[0]
       value: 
       objectReference: {fileID: 1889235291}
@@ -8413,6 +8453,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8709035193177651117, guid: c7f6dba7be4fe63409ea65979ba53819,
         type: 3}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1889235291}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1819538805}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 30144544}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 1474126}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[4]
+      value: 
+      objectReference: {fileID: 923635461}
+    - target: {fileID: 3576455870464054200, guid: 62dddad955a5b027ea4eb2c533ca389b,
+        type: 3}
+      propertyPath: capturePoints.Array.data[5]
+      value: 
+      objectReference: {fileID: 193230751}
     - target: {fileID: 2510208131679812498, guid: 62dddad955a5b027ea4eb2c533ca389b,
         type: 3}
       propertyPath: m_LocalRotation.y

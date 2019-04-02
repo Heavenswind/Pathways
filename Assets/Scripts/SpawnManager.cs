@@ -6,7 +6,7 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject minion = null;
     [SerializeField] private Vector3[] spawnOffsets = null;
-    [SerializeField] internal Transform[] capturesPoints = null;
+    [SerializeField] internal Transform[] capturePoints = null;
     [SerializeField] internal int[] transitions = null;
     
     internal static bool spawning = true;
