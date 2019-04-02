@@ -88,7 +88,7 @@ public class MinionController : UnitController
     }
 
     // Check if there are enemies within the aggression range.
-    // If there are, one is target and the unit will move to attack it.
+    // If there are, one is targeted and the unit will move to attack it.
     private UnitController FindClosestEnemy()
     {
         Collider[] colliders = Physics.OverlapSphere(
