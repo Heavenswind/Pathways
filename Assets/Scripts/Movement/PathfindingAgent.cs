@@ -11,7 +11,7 @@ public class PathfindingAgent : MonoBehaviour
     [Header("Pathfiding Agent")]
     public float maxLinearVelocity = 3.0f;
     
-    private const float maxAngularVelocity = 15.0f;
+    private const float maxAngularVelocity = 30.0f;
     private const float maxMovementAngle = 90.0f;
     private const float satisfactionRadius = 1.0f;
     private const float timeToTarget = 0.25f;
@@ -218,7 +218,7 @@ public class PathfindingAgent : MonoBehaviour
     {
         do
         {
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
         while (!RotateToward(position));
         Stop(true);
@@ -242,7 +242,7 @@ public class PathfindingAgent : MonoBehaviour
                 ++targetNodeIndex;
                 arrived = false;
             }
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
         while (!arrived);
         Stop(true);
@@ -273,7 +273,7 @@ public class PathfindingAgent : MonoBehaviour
                 ++targetNodeIndex;
                 arrived = false;
             }
-            yield return new WaitForFixedUpdate();
+            yield return null;
             if (target == null)
             {
                 Stop(false);
