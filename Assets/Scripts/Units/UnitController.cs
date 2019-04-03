@@ -9,7 +9,7 @@ public class UnitController : PathfindingAgent
     [SerializeField] private int meleeDamage = 1;
     [SerializeField] private float attackDelay = 1;
     [SerializeField] private float attackAnimationDuration = 0;
-    [SerializeField] private GameObject projectile = null;
+    [SerializeField] internal GameObject projectile = null;
     [SerializeField] private bool respawns = false;
 
     internal string team;

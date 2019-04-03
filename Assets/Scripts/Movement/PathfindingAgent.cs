@@ -22,7 +22,7 @@ public class PathfindingAgent : MonoBehaviour
     protected bool activated = true;
     
     private IEnumerator movement; // coroutine of the movement
-    private Vector3 velocity; // velocity of the agent
+    internal Vector3 velocity; // velocity of the agent
     private Vector3? movementTargetPosition; // target movement position
     private float arrivalAcceptanceRange;
     private Action onMovementCompletionAction; // action performed after completing a movement coroutine
@@ -57,10 +57,15 @@ public class PathfindingAgent : MonoBehaviour
             {
                 Stop(true);
             }
-            else
+            else if (tag.EndsWith("Player") && hit.collider.tag.EndsWith("NPC"))
+            {
+                var controller = hit.gameObject.GetComponent<CharacterController>();
+                controller.SimpleMove(new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z));
+            }
+            else if (tag.EndsWith("NPC"))
             {
                 var agent = hit.gameObject.GetComponent<PathfindingAgent>();
-                if (agent != null && (agent.isStill || agent.velocity.magnitude < velocity.magnitude))
+                if (agent != null && agent.isStill)
                 {
                     avoid = true;
                 }
@@ -150,7 +155,7 @@ public class PathfindingAgent : MonoBehaviour
                 PathfindingGraph.instance.nodeWidth,
                 PathfindingGraph.levelLayerMask,
                 UnityEngine.QueryTriggerInteraction.Ignore);
-            if (pathIsClear || Vector2.Distance(path[i], path.Last()) <= arrivalAcceptanceRange)
+            if (pathIsClear || Vector2.Distance(path[i], path.Last()) <= arrivalAcceptanceRange + 1)
             {
                 targetNodeIndex = i;
             }

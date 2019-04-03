@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class PlayerAllyController : UnitController
 {
-    private const float capturePointRange = 5;
-    private const float aggressionRange = 8;
-    private const float threatRange = 10;
+    private const float capturePointRange = 2;
+    private const float aggressionRange = 10;
 
     private Vector3 teamBase;
     private CapturePoint[] capturePoints;
@@ -41,33 +40,51 @@ public class PlayerAllyController : UnitController
         var enemyDistance = (closestEnemy != null)? Vector3.Distance(transform.position, closestEnemy.transform.position) : Mathf.Infinity;
 
         // Fuzzy input
-        float healthy = Mathf.Clamp01((10f / 6f) * hpRatio - (1f / 3f));
-        float hurt = 1 - healthy;
-        float onPoint = (capturePointDistance < capturePointRange)? 1 : 0;
-        float closeToPoint = Mathf.Clamp01(-0.1f * capturePointDistance + 1.5f);
-        float farFromPoint = 1 - closeToPoint;
-        float captured = capturePoint.IsOwnedByTeam(team)? 1 : 0;
+        float critical = Mathf.Clamp01(-10 * hpRatio + 3);
+        float hurt = Mathf.Clamp01(-10 * hpRatio + 5) - critical;
+        float healthy = 1 - hurt;
+        //Debug.Log(string.Format("hp ratio: {0}, critical: {1}, hurt: {2}, healthy: {3}", hpRatio, critical, hurt, healthy));
+
+        float inDanger = Mathf.Clamp01(-0.5f * enemyDistance + 2);
+        float inCombat = Mathf.Clamp01(-0.5f * enemyDistance + 5) - inDanger;
+        float safe = 1 - inCombat;
         float canAttack = (Time.time >= nextAttack)? 1 : 0;
-        float enemyInRange = Mathf.Clamp01(-0.5f * enemyDistance + 5);
-        //float threat = EvaluateThreat();
+        float cannotAttack = 1 - canAttack;
+        
+        float onPoint = Mathf.Clamp01(-1f/3f * capturePointDistance + 10f/6f);
+        float awayFromPoint = 1 - onPoint;
+        float captured = Mathf.Clamp01(0.1f * capturePoint.score);
+        float notCaptured = 1 - captured;        
 
         // Fuzzy output after rule evaluation
-        float returnToBase = hurt;
-        float moveToPoint = Mathf.Min(1 - onPoint, 1 - captured, 1 - enemyInRange);
-        float stay = Mathf.Max(Mathf.Min(onPoint, 1 - captured), enemyInRange);
-        float attack = Mathf.Min(canAttack, enemyInRange);
-        //Debug.Log(string.Format("Return to base: {0}, move to point: {1}, stay: {2}, attack: {3}", returnToBase, moveToPoint, stay, attack));
+        float returnToBase = Mathf.Max(critical, Mathf.Min(hurt, safe)); // critical || (hurt && safe)
+        float attack = Mathf.Min(canAttack, Mathf.Max(inCombat, inDanger)); // canAttack && (inCombat || inDanger)
+        float moveAway = Mathf.Min(cannotAttack, inDanger); // cannotAttack && inDanger
+        float moveToPoint = Mathf.Min(awayFromPoint, notCaptured, safe); // awayFromPoint && notCaptured && safe
+        float stay = Mathf.Max(Mathf.Min(onPoint, notCaptured), Mathf.Max(inCombat, inDanger)); // (onPoint && notCaptured) || (inCombat || inDanger)
+        //Debug.Log(string.Format("Return to base: {0}, attack: {1}, move away: {2}, move to point: {3}, stay: {4}", returnToBase, attack, moveAway, moveToPoint, stay));
 
         // Crisp output after defuzzification
-        if (returnToBase >= Mathf.Max(attack, moveToPoint, stay))
+        if (returnToBase >= Mathf.Max(attack, moveAway, moveToPoint, stay))
         {
             Arrive(teamBase, capturePointRange, Heal);
         }
+        else if (moveAway >= Mathf.Max(attack, moveToPoint, stay))
+        {
+            Arrive(transform.position + (transform.position - closestEnemy.transform.position).normalized * 3);
+        }
         else if (attack >= Mathf.Max(moveToPoint, stay))
         {
-            Fire(closestEnemy.transform.position);
+            if (PathfindingGraph.instance.HasClearPath(transform.position, closestEnemy.transform.position, 0.5f))
+            {
+                Fire(closestEnemy.transform.position);
+            }
+            else
+            {
+                Chase(closestEnemy.transform);
+            }
         }
-        else if (moveToPoint > stay)
+        else if (moveToPoint >= stay)
         {
             SetTargetCapturePoint(targetCapturePoint);
         }
@@ -77,7 +94,7 @@ public class PlayerAllyController : UnitController
         }
     }
 
-    //Gets the closest point of interest based on neutrality or enemy capture.
+    // Gets the closest point of interest based on neutrality or enemy capture.
     int ChooseCapturePoint()
     {
         float shortestDistance = Mathf.Infinity;
@@ -127,28 +144,5 @@ public class PlayerAllyController : UnitController
             }
         }
         return null;
-    }
-
-    private float EvaluateThreat()
-    {
-        Collider[] colliders = Physics.OverlapSphere(
-            transform.position,
-            threatRange,
-            LayerMask.GetMask("Units"),
-            QueryTriggerInteraction.Ignore);
-        var orderedColliders = colliders.OrderBy(
-            collider => Vector3.Distance(collider.transform.position, transform.position));
-        foreach (Collider collider in orderedColliders)
-        {
-            //if (collider.tag == tag)
-            //{
-            //    var enemy = collider.GetComponent<UnitController>();
-            //    if (enemy != null)
-            //    {
-            //        return enemy;
-            //    }
-            //}
-        }
-        return 0;
     }
 }
