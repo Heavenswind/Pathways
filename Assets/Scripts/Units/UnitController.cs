@@ -88,7 +88,7 @@ public class UnitController : PathfindingAgent
     }
 
     // Make the unit attack the target enemy in melee range.
-    public void Attack(UnitController target)
+    public void Attack(UnitController target, bool useInfluence)
     {
         if (!activated || isAttacking) return;
         this.target = target;
@@ -99,7 +99,7 @@ public class UnitController : PathfindingAgent
         }
         else
         {
-            Chase(target.transform, MeleeAttackDistance(), PerformAttack);
+            Chase(target.transform, useInfluence, MeleeAttackDistance(), PerformAttack);
         }
     }
 

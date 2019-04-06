@@ -101,25 +101,25 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Arrive at the target position.
-    public void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
+    public void Arrive(Vector3 position, bool useInfluence, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated) return;
         Stop();
         movementTargetPosition = position;
         arrivalAcceptanceRange = acceptanceRange;
         onMovementCompletionAction = completionAction;
-        movement = ArriveCoroutine(position);
+        movement = ArriveCoroutine(position, useInfluence);
         StartCoroutine(movement);
     }
 
     // Chase the target.
-    public void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
+    public void Chase(Transform target, bool useInfluence, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated) return;
         Stop();
         arrivalAcceptanceRange = acceptanceRange;
         onMovementCompletionAction = completionAction;
-        movement = ChaseCoroutine(target);
+        movement = ChaseCoroutine(target, useInfluence);
         StartCoroutine(movement);
     }
 
@@ -225,10 +225,10 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Make the agent arrive smoothly at the given target position.
-    private IEnumerator ArriveCoroutine(Vector3 position)
+    private IEnumerator ArriveCoroutine(Vector3 position, bool useInfluence)
     {
         var exactArrival = arrivalAcceptanceRange == 0;
-        var path = PathfindingGraph.instance.ComputePath(transform.position, position, exactArrival);
+        var path = PathfindingGraph.instance.ComputePath(transform.position, position, useInfluence, exactArrival);
         var targetNodeIndex = 0;
         var targetNodePosition = transform.position;
         var arrived = false;
@@ -249,10 +249,10 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Make the agent chase the given target.
-    private IEnumerator ChaseCoroutine(Transform target)
+    private IEnumerator ChaseCoroutine(Transform target, bool useInfluence)
     {
         var position = target.position;
-        var path = PathfindingGraph.instance.ComputePath(transform.position, position, true);
+        var path = PathfindingGraph.instance.ComputePath(transform.position, position, useInfluence, true);
         var targetNodeIndex = 0;
         var targetNodePosition = transform.position;
         var arrived = false;
@@ -261,7 +261,7 @@ public class PathfindingAgent : MonoBehaviour
             if (Vector3.Distance(position, target.position) > pathRecalculationThreshold)
             {
                 position = target.position;
-                path = PathfindingGraph.instance.ComputePath(transform.position, position);
+                path = PathfindingGraph.instance.ComputePath(transform.position, position, false);
                 targetNodeIndex = 0;
                 targetNodePosition = transform.position;
             }

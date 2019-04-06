@@ -46,7 +46,7 @@ public class ChampionController : UnitController
         if (enemy != null && enemy != target)
         {
             if (Vector3.Distance(enemy.transform.position, transform.position) <= (aggressionRange / 2.0f))
-                Attack(enemy);
+                Attack(enemy, false);
             else
                 Fire(enemy.transform.position);
         }
@@ -62,7 +62,7 @@ public class ChampionController : UnitController
                 {
                     //Kite : needs work
                     Vector3 position = (enemy.transform.position - transform.position) / 2.0f;
-                    Arrive(-position, 0.5f);
+                    Arrive(-position, true, 0.5f);
                     Fire(enemy.transform.position);
 
                 }
@@ -71,7 +71,7 @@ public class ChampionController : UnitController
             {
                 //Melee
                 if (Vector3.Distance(enemy.transform.position, transform.position) <= (aggressionRange / 2.0f))
-                    Attack(enemy);
+                    Attack(enemy, false);
                 //Range
                 else
                     Fire(enemy.transform.position);
@@ -200,7 +200,7 @@ public class ChampionController : UnitController
         // Go to the base to heal.
         else if(IsCritical())
         {
-            Arrive(initialPosition, capturePointRange);
+            Arrive(initialPosition, true, capturePointRange);
             if (Vector3.Distance(transform.position, initialPosition) <= 1)
             {
                 hitPoints = totalHitPoints;
@@ -222,7 +222,7 @@ public class ChampionController : UnitController
     {
         targetCapturePoint = capturePointIndex;
         var capturePoint = capturesPoints[targetCapturePoint];
-        Arrive(capturePoint.transform.position, capturePointRange, OnEnterCapturePoint);
+        Arrive(capturePoint.transform.position, true, capturePointRange, OnEnterCapturePoint);
     }
 
     // Callback called when the champion enters its target capture point.

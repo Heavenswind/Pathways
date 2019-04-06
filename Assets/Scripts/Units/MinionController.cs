@@ -17,7 +17,7 @@ public class MinionController : UnitController
         var enemy = FindClosestEnemy();
         if (enemy != null && enemy != target)
         {
-            Attack(enemy);
+            Attack(enemy, false);
         }
         else if (isStill && (!InRangeOfPoint() || TargetPointIsCaptured()))
         {
@@ -41,7 +41,7 @@ public class MinionController : UnitController
     {
         targetCapturePoint = capturePointIndex;
         var capturePoint = manager.capturesPoints[targetCapturePoint];
-        Arrive(capturePoint.position, capturePointRange, OnEnterCapturePoint);
+        Arrive(capturePoint.position, false, capturePointRange, OnEnterCapturePoint);
     }
 
     // Check if the minion is in range of its target capture point.
