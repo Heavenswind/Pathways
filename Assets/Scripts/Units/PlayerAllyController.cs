@@ -72,35 +72,42 @@ public class PlayerAllyController : UnitController
         // Crisp output after defuzzification
         if (returnToBase >= Mathf.Max(flee, attack, chase, moveToPoint, stay))
         {
+            //Debug.Log("return to base");
             Arrive(teamBase, 5, Heal);
         }
         else if (flee >= Mathf.Max(attack, chase, moveToPoint, stay))
         {
+            //Debug.Log("flee");
             Arrive(transform.position + (transform.position - closestEnemy.transform.position).normalized * 3);
         }
         else if (attack >= Mathf.Max(chase, moveToPoint, stay))
         {
             if (PathfindingGraph.instance.HasClearPath(transform.position, closestEnemy.transform.position, 0.5f))
             {
+                //Debug.Log("attack");
                 var distance = Vector3.Distance(transform.position, closestEnemy.transform.position);
                 var timeToTarget = distance / projectile.GetComponent<Projectile>().speed;
                 Fire(closestEnemy.transform.position + (closestEnemy.velocity * timeToTarget));
             }
             else
             {
+                //Debug.Log("chase to attack");
                 Chase(closestEnemy.transform);
             }
         }
         else if (chase >= Mathf.Max(moveToPoint, stay))
         {
+            //Debug.Log("chase");
             Chase(closestEnemy.transform);
         }
         else if (moveToPoint >= stay)
         {
+            //Debug.Log("move to base");
             SetTargetCapturePoint(targetCapturePoint);
         }
         else
         {
+            //Debug.Log("stay");
             Stop();
         }
     }

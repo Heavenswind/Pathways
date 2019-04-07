@@ -149,13 +149,12 @@ public class PathfindingAgent : MonoBehaviour
         {
             var checkHeight = PathfindingGraph.instance.graphHeight
                 + PathfindingGraph.instance.nodeWidth;
-            var pathIsClear = !Physics.CheckCapsule(
-                new Vector3(transform.position.x, checkHeight, transform.position.z),
-                new Vector3(path[i].x, checkHeight, path[i].y),
-                PathfindingGraph.instance.nodeWidth,
-                PathfindingGraph.levelLayerMask,
-                UnityEngine.QueryTriggerInteraction.Ignore);
-            if (pathIsClear || Vector2.Distance(path[i], path.Last()) <= arrivalAcceptanceRange + 1)
+            var pathIsClear = PathfindingGraph.instance.HasClearPath(
+                transform.position,
+                new Vector3(path[i].x, 0, path[i].y));
+            var withinRange = arrivalAcceptanceRange > 0
+                && Vector2.Distance(path[i], path.Last()) <= arrivalAcceptanceRange + 1;
+            if (pathIsClear || withinRange)
             {
                 targetNodeIndex = i;
             }
