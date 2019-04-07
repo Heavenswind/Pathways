@@ -2455,6 +2455,7 @@ MonoBehaviour:
   projectile: {fileID: 597860839283275124, guid: 0353f85fdca36ca31a612d92abaaaafd,
     type: 3}
   respawns: 1
+  ally: {fileID: 588766024}
 --- !u!1001 &585727774
 PrefabInstance:
   m_ObjectHideFlags: 0
