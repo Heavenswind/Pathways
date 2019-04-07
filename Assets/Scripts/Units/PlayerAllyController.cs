@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class PlayerAllyController : UnitController
 {
+    [Header("Player Ally Controller")]
+    public Transform ally;
+
     private const float capturePointRange = 2.5f;
     private const float aggressionRange = 10;
-
     private Vector3 teamBase;
     private CapturePoint[] capturePoints;
 
@@ -104,7 +106,7 @@ public class PlayerAllyController : UnitController
     }
 
     // Gets the closest point of interest based on neutrality or enemy capture.
-    int ChooseCapturePoint()
+    private int ChooseCapturePoint()
     {
         float shortestDistance = Mathf.Infinity;
         int bestPoint = 0;
@@ -112,8 +114,12 @@ public class PlayerAllyController : UnitController
         {
             if (!capturePoints[i].IsOwnedByTeam(team))
             {
-                float distanceToPoint = Vector3.Distance(transform.position, capturePoints[i].transform.position);
-                if (distanceToPoint < shortestDistance)
+                var point = capturePoints[i].transform;
+                float distanceToPoint = Vector3.Distance(transform.position, point.position);
+                if (distanceToPoint < shortestDistance
+                    && (Vector3.Distance(ally.position, point.position) > 15
+                        || Vector3.Distance(transform.position, ally.position) < 10
+                        || IsAllyInDanger()))
                 {
                     shortestDistance = distanceToPoint;
                     bestPoint = i;
@@ -121,6 +127,17 @@ public class PlayerAllyController : UnitController
             }
         }
         return bestPoint;
+    }
+
+    private bool IsAllyInDanger()
+    {
+        Collider[] colliders = Physics.OverlapSphere(
+            ally.position,
+            aggressionRange * 2,
+            LayerMask.GetMask("Units"),
+            QueryTriggerInteraction.Ignore);
+        var enemyCount = colliders.Count(collider => collider.tag.StartsWith(enemyTeam));
+        return enemyCount > 5;
     }
     
     // Set the target capture point of the unit.
