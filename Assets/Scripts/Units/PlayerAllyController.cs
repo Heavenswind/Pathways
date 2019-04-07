@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerAllyController : UnitController
 {
-    private const float capturePointRange = 2;
+    private const float capturePointRange = 2.5f;
     private const float aggressionRange = 10;
 
     private Vector3 teamBase;
@@ -45,44 +45,53 @@ public class PlayerAllyController : UnitController
         float healthy = 1 - hurt;
         //Debug.Log(string.Format("hp ratio: {0}, critical: {1}, hurt: {2}, healthy: {3}", hpRatio, critical, hurt, healthy));
 
-        float inDanger = Mathf.Clamp01(-0.5f * enemyDistance + 2);
-        float inCombat = Mathf.Clamp01(-0.5f * enemyDistance + 5) - inDanger;
-        float safe = 1 - inCombat;
+        float inDanger = Mathf.Clamp01(-1 * enemyDistance + 5);
+        float inCombat = Mathf.Clamp01(-1 * enemyDistance + 8) - inDanger;
+        float enemyInSight = Mathf.Clamp01(-0.5f * enemyDistance + 6) - (inDanger + inCombat);
+        float outOfCombat = 1 - (inDanger + inCombat + enemyInSight);
         float canAttack = (Time.time >= nextAttack)? 1 : 0;
         float cannotAttack = 1 - canAttack;
+        //Debug.Log(string.Format("danger: {0}, combat: {1}, sight: {2}, out: {3}", inDanger, inCombat, enemyInSight, outOfCombat));
         
-        float onPoint = Mathf.Clamp01(-1f/3f * capturePointDistance + 10f/6f);
+        float onPoint = (capturePointDistance <= capturePointRange)? 1 : 0;
         float awayFromPoint = 1 - onPoint;
-        float captured = Mathf.Clamp01(0.1f * capturePoint.score);
-        float notCaptured = 1 - captured;        
+        float captured = capturePoint.IsOwnedByTeam(team)? 1 : 0;
+        float notCaptured = 1 - captured;
 
         // Fuzzy output after rule evaluation
-        float returnToBase = Mathf.Max(critical, Mathf.Min(hurt, safe)); // critical || (hurt && safe)
+        float returnToBase = Mathf.Max(critical, Mathf.Min(hurt, outOfCombat)); // critical || (hurt && safe)
         float attack = Mathf.Min(canAttack, Mathf.Max(inCombat, inDanger)); // canAttack && (inCombat || inDanger)
-        float moveAway = Mathf.Min(cannotAttack, inDanger); // cannotAttack && inDanger
-        float moveToPoint = Mathf.Min(awayFromPoint, notCaptured, safe); // awayFromPoint && notCaptured && safe
-        float stay = Mathf.Max(Mathf.Min(onPoint, notCaptured), Mathf.Max(inCombat, inDanger)); // (onPoint && notCaptured) || (inCombat || inDanger)
-        //Debug.Log(string.Format("Return to base: {0}, attack: {1}, move away: {2}, move to point: {3}, stay: {4}", returnToBase, attack, moveAway, moveToPoint, stay));
+        float flee = Mathf.Min(cannotAttack, inDanger); // cannotAttack && inDanger
+        float chase = Mathf.Min(enemyInSight, 1 - inCombat);
+        float moveToPoint = Mathf.Min(awayFromPoint, notCaptured, outOfCombat); // awayFromPoint && notCaptured && safe
+        float stay = Mathf.Max(Mathf.Min(onPoint, notCaptured, 1 - inDanger), inCombat); // (onPoint && notCaptured && !inDanger) || inCombat
+        //Debug.Log(string.Format("Return to base: {0}, attack: {1}, flee: {2}, chase: {3}, move to point: {4}, stay: {5}", returnToBase, attack, flee, chase, moveToPoint, stay));
 
         // Crisp output after defuzzification
-        if (returnToBase >= Mathf.Max(attack, moveAway, moveToPoint, stay))
+        if (returnToBase >= Mathf.Max(flee, attack, chase, moveToPoint, stay))
         {
-            Arrive(teamBase, capturePointRange, Heal);
+            Arrive(teamBase, 5, Heal);
         }
-        else if (moveAway >= Mathf.Max(attack, moveToPoint, stay))
+        else if (flee >= Mathf.Max(attack, chase, moveToPoint, stay))
         {
             Arrive(transform.position + (transform.position - closestEnemy.transform.position).normalized * 3);
         }
-        else if (attack >= Mathf.Max(moveToPoint, stay))
+        else if (attack >= Mathf.Max(chase, moveToPoint, stay))
         {
             if (PathfindingGraph.instance.HasClearPath(transform.position, closestEnemy.transform.position, 0.5f))
             {
-                Fire(closestEnemy.transform.position);
+                var distance = Vector3.Distance(transform.position, closestEnemy.transform.position);
+                var timeToTarget = distance / projectile.GetComponent<Projectile>().speed;
+                Fire(closestEnemy.transform.position + (closestEnemy.velocity * timeToTarget));
             }
             else
             {
                 Chase(closestEnemy.transform);
             }
+        }
+        else if (chase >= Mathf.Max(moveToPoint, stay))
+        {
+            Chase(closestEnemy.transform);
         }
         else if (moveToPoint >= stay)
         {

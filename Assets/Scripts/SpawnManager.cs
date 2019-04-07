@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] internal int[] transitions = null;
     
     internal static bool spawning = true;
-    private const float spawnStartDelay = 5;
+    private const float spawnStartDelay = 2;
     private const float spawnRate = 10;
     private const float delayPerSpawnInWave = 0.2f;
     private const int amountPerWave = 9;

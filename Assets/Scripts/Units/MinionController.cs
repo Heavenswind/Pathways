@@ -8,7 +8,7 @@ public class MinionController : UnitController
 {
     internal SpawnManager manager;
     private int targetCapturePoint = 0;
-    private float aggressionRange = 5;
+    private float aggressionRange = 7;
 
     private const float capturePointRange = 5;
 

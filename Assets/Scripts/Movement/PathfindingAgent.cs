@@ -105,7 +105,7 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Face the target position.
-    public void Face(Vector3 position, Action completionAction = null)
+    public virtual void Face(Vector3 position, Action completionAction = null)
     {
         if (!activated) return;
         Stop();
@@ -115,7 +115,7 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Arrive at the target position.
-    public void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
+    public virtual void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated) return;
         Stop();
@@ -127,7 +127,7 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Chase the target.
-    public void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
+    public virtual void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated) return;
         Stop();

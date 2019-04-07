@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public class UnitController : PathfindingAgent
     private new Collider collider;
     private Vector3 size;
     private const float meleeAttackRange = 1;
+    private const float waitAfterAttackDuration = 0.1f;
     private const float respawnDelay = 10;
     internal float nextAttack = 0;
     private bool isAttacking = false;
@@ -87,6 +89,24 @@ public class UnitController : PathfindingAgent
         animator.SetFloat("health", hitPoints);
     }
 
+    public override void Face(Vector3 position, Action completionAction = null)
+    {
+        if (!activated || isAttacking) return;
+        base.Face(position, completionAction);
+    }
+
+    public override void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
+    {
+        if (!activated || isAttacking) return;
+        base.Arrive(position, acceptanceRange, completionAction);
+    }
+
+    public override void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
+    {
+        if (!activated || isAttacking) return;
+        base.Chase(target, acceptanceRange, completionAction);
+    }
+
     // Make the unit fire a projectile toward the target position.
     public void Fire(Vector3 position)
     {
@@ -145,6 +165,7 @@ public class UnitController : PathfindingAgent
         var offset = (Vector3.up * size.y * 0.5f) + (transform.forward * size.z / 2);
         var instance = Instantiate(projectile, transform.position + offset, transform.rotation);
         instance.GetComponent<Projectile>().target = enemyTeam;
+        yield return new WaitForSeconds(waitAfterAttackDuration);
         isAttacking = false;
     }
 
@@ -158,6 +179,7 @@ public class UnitController : PathfindingAgent
             target.TakeDamage(meleeDamage);
             target = null;
         }
+        yield return new WaitForSeconds(waitAfterAttackDuration);
         isAttacking = false;
     }
 
