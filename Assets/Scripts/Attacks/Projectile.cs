@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private int damage = 1;
-    [SerializeField] private float speed = 1.0f;
+    [SerializeField] internal float speed = 1.0f;
     [SerializeField] private float maxTravelDistance = 1.0f;
     
     internal string target;

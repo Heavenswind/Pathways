@@ -7,8 +7,10 @@ public class CameraFollow : MonoBehaviour
     public Transform target = null;
     public float speed = 1.0f;
 
-    float height;
-    Vector3 offset;
+    private float height;
+    private Vector3 offset;
+    private bool targetedMode = true;
+    private Vector3 previousMousePosition;
 
     void Start()
     {
@@ -21,14 +23,44 @@ public class CameraFollow : MonoBehaviour
 
     void Update()
     {
-        if (target != null)
+        // Poll user input
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            transform.position = Vector3.Lerp(
-                transform.position,
-                target.position + offset,
-                Time.deltaTime * speed
-            );
-            transform.position = new Vector3(transform.position.x, height, transform.position.z);
+            targetedMode = !targetedMode;
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse2))
+        {
+            previousMousePosition = Input.mousePosition;
+        }
+
+        // Move camera
+        if (targetedMode)
+        {
+            if (target != null)
+            {
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    target.position + offset,
+                    Time.deltaTime * speed
+                );
+                transform.position = new Vector3(transform.position.x, height, transform.position.z);
+            }
+        }
+        else
+        {
+            var zoom = Input.GetAxis("Mouse ScrollWheel");
+            transform.position += Vector3.down * zoom * Time.deltaTime * 500;
+            if (Input.GetKey(KeyCode.Mouse2))
+            {
+                var displacement = Input.mousePosition - previousMousePosition;
+                transform.position -= Vector3.right * displacement.x * 0.025f;
+                transform.position -= Vector3.forward * displacement.y * 0.025f;
+                previousMousePosition = Input.mousePosition;
+            }
+            transform.position = new Vector3(
+                Mathf.Clamp(transform.position.x, -65, 65),
+                Mathf.Clamp(transform.position.y, 25, 75),
+                Mathf.Clamp(transform.position.z, -45, 10));
         }
     }
 }

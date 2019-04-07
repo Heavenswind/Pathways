@@ -11,7 +11,7 @@ public class PathfindingAgent : MonoBehaviour
     [Header("Pathfiding Agent")]
     public float maxLinearVelocity = 3.0f;
     
-    private const float maxAngularVelocity = 15.0f;
+    private const float maxAngularVelocity = 30.0f;
     private const float maxMovementAngle = 90.0f;
     private const float satisfactionRadius = 1.0f;
     private const float timeToTarget = 0.25f;
@@ -22,12 +22,13 @@ public class PathfindingAgent : MonoBehaviour
     protected bool activated = true;
     
     private IEnumerator movement; // coroutine of the movement
-    private Vector3 velocity; // velocity of the agent
+    internal Vector3 velocity; // velocity of the agent
     private Vector3? movementTargetPosition; // target movement position
     private float arrivalAcceptanceRange;
     private Action onMovementCompletionAction; // action performed after completing a movement coroutine
     private const float pathRecalculationThreshold = 1;
     private string[] ignoredColliders = new string[]{"Ground", "capturePoint"};
+    private bool avoid = false;
 
     public bool isStill
     {
@@ -55,6 +56,19 @@ public class PathfindingAgent : MonoBehaviour
                 && Vector3.Distance(transform.position, movementTargetPosition.Value) < arrivalAcceptanceRange)
             {
                 Stop(true);
+            }
+            else if (tag.EndsWith("Player") && hit.collider.tag.EndsWith("NPC"))
+            {
+                var controller = hit.gameObject.GetComponent<CharacterController>();
+                controller.SimpleMove(new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z));
+            }
+            else if (tag.EndsWith("NPC"))
+            {
+                var agent = hit.gameObject.GetComponent<PathfindingAgent>();
+                if (agent != null && agent.isStill)
+                {
+                    avoid = true;
+                }
             }
         }
     }
@@ -91,7 +105,7 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Face the target position.
-    public void Face(Vector3 position, Action completionAction = null)
+    public virtual void Face(Vector3 position, Action completionAction = null)
     {
         if (!activated) return;
         Stop();
@@ -101,7 +115,7 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Arrive at the target position.
-    public void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
+    public virtual void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated) return;
         Stop();
@@ -113,7 +127,7 @@ public class PathfindingAgent : MonoBehaviour
     }
 
     // Chase the target.
-    public void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
+    public virtual void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated) return;
         Stop();
@@ -141,7 +155,7 @@ public class PathfindingAgent : MonoBehaviour
                 PathfindingGraph.instance.nodeWidth,
                 PathfindingGraph.levelLayerMask,
                 UnityEngine.QueryTriggerInteraction.Ignore);
-            if (pathIsClear || Vector2.Distance(path[i], path.Last()) <= arrivalAcceptanceRange)
+            if (pathIsClear || Vector2.Distance(path[i], path.Last()) <= arrivalAcceptanceRange + 1)
             {
                 targetNodeIndex = i;
             }
@@ -165,6 +179,11 @@ public class PathfindingAgent : MonoBehaviour
     private void SetVelocity(Vector3 velocity)
     {
         this.velocity = velocity;
+        if (avoid)
+        {
+            this.velocity += transform.right;
+            avoid = false;
+        }
         animator.SetFloat("speed", velocity.magnitude);
     }
 
@@ -216,11 +235,10 @@ public class PathfindingAgent : MonoBehaviour
     // Make the agent rotate toward the given target position.
     private IEnumerator FaceCoroutine(Vector3 position)
     {
-        do
+        while (!RotateToward(position))
         {
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
-        while (!RotateToward(position));
         Stop(true);
     }
 
@@ -237,12 +255,19 @@ public class PathfindingAgent : MonoBehaviour
             (targetNodeIndex, targetNodePosition) = SmoothPath(path, targetNodeIndex);
             RotateToward(targetNodePosition);
             arrived = MoveToward(targetNodePosition, true);
-            if (arrived && targetNodeIndex < path.Count - 2)
+            if (arrived)
             {
-                ++targetNodeIndex;
-                arrived = false;
+                if (targetNodeIndex == path.Count - 1)
+                {
+                    break;
+                }
+                else
+                {
+                    ++targetNodeIndex;
+                    arrived = false;
+                }
             }
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
         while (!arrived);
         Stop(true);
@@ -273,7 +298,7 @@ public class PathfindingAgent : MonoBehaviour
                 ++targetNodeIndex;
                 arrived = false;
             }
-            yield return new WaitForFixedUpdate();
+            yield return null;
             if (target == null)
             {
                 Stop(false);

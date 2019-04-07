@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,21 +10,22 @@ public class UnitController : PathfindingAgent
     [SerializeField] private int meleeDamage = 1;
     [SerializeField] private float attackDelay = 1;
     [SerializeField] private float attackAnimationDuration = 0;
-    [SerializeField] private GameObject projectile = null;
+    [SerializeField] internal GameObject projectile = null;
     [SerializeField] private bool respawns = false;
 
     internal string team;
     internal string enemyTeam;
     internal int totalHitPoints;
+    internal Vector3 spawnPosition;
     internal UnitController target;
     internal HealthBar healthBar;
 
     private new Collider collider;
     private Vector3 size;
-    private Vector3 spawnPosition;
     private const float meleeAttackRange = 1;
+    private const float waitAfterAttackDuration = 0.1f;
     private const float respawnDelay = 10;
-    private float nextAttack = 0;
+    internal float nextAttack = 0;
     private bool isAttacking = false;
 
     protected override void Awake()
@@ -78,6 +80,31 @@ public class UnitController : PathfindingAgent
     public void Kill()
     {
         TakeDamage(hitPoints);
+    }
+
+    // Heal the unit.
+    public void Heal()
+    {
+        hitPoints = totalHitPoints;
+        animator.SetFloat("health", hitPoints);
+    }
+
+    public override void Face(Vector3 position, Action completionAction = null)
+    {
+        if (!activated || isAttacking) return;
+        base.Face(position, completionAction);
+    }
+
+    public override void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
+    {
+        if (!activated || isAttacking) return;
+        base.Arrive(position, acceptanceRange, completionAction);
+    }
+
+    public override void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
+    {
+        if (!activated || isAttacking) return;
+        base.Chase(target, acceptanceRange, completionAction);
     }
 
     // Make the unit fire a projectile toward the target position.
@@ -138,6 +165,7 @@ public class UnitController : PathfindingAgent
         var offset = (Vector3.up * size.y * 0.5f) + (transform.forward * size.z / 2);
         var instance = Instantiate(projectile, transform.position + offset, transform.rotation);
         instance.GetComponent<Projectile>().target = enemyTeam;
+        yield return new WaitForSeconds(waitAfterAttackDuration);
         isAttacking = false;
     }
 
@@ -151,6 +179,7 @@ public class UnitController : PathfindingAgent
             target.TakeDamage(meleeDamage);
             target = null;
         }
+        yield return new WaitForSeconds(waitAfterAttackDuration);
         isAttacking = false;
     }
 

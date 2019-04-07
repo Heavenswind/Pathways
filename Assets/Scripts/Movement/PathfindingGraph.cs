@@ -60,11 +60,25 @@ public class PathfindingGraph : MonoBehaviour
         }
     }
 
+    // Check if an agent has a clear path from the given start position to the
+    // end position.
+    public bool HasClearPath(Vector3 startPosition, Vector3 endPosition, float width = 1)
+    {
+        var checkHeight = PathfindingGraph.instance.graphHeight + width;
+        var pathIsClear = !Physics.CheckCapsule(
+            new Vector3(startPosition.x, checkHeight, startPosition.z),
+            new Vector3(endPosition.x, checkHeight, endPosition.z),
+            width,
+            PathfindingGraph.levelLayerMask,
+            UnityEngine.QueryTriggerInteraction.Ignore);
+        return pathIsClear;
+    }
+
     // Compute and return the shortest path from the position to the target.
     // This is an implementation of the A* pathfinding algorithm.
     // It uses the Euclidean distance as the heuristic.
-    // The approximate flag allows the character to move the the nearest node if the target position
-    // is obstructed.
+    // The approximate flag allows the character to move the the nearest node if
+    // the target position is obstructed.
     public List<Vector2> ComputePath(
         Vector3 worldPosition,
         Vector3 worldTarget,

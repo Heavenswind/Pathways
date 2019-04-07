@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class PlayerController : UnitController
 {
+    private Vector3 playerBase;
+
+    protected override void Start()
+    {
+        base.Start();
+        playerBase = GameObject.FindWithTag("blueBase").transform.position;
+    }
+
     void Update()
     {
         // Poll user input
@@ -25,6 +33,12 @@ public class PlayerController : UnitController
                     Fire(targetPosition);
                 }
             }
+        }
+
+        // Heal player at base
+        if (Vector3.Distance(transform.position, playerBase) <= 5)
+        {
+            Heal();
         }
     }
 
