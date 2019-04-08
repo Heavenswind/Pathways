@@ -249,17 +249,19 @@ public class PathfindingGraph : MonoBehaviour
         {
             switch (col.gameObject.tag)
             {
+                // move towards Red (allies)
+                // avoid blue (enemies)
                 case "redPlayer":
-                    influence += 1.0f;
+                    influence -= 2.5f;
                     break;
                 case "bluePlayer":
-                    influence -= 1.0f;
+                    influence += 2.5f;
                     break;
                 case "redNPC":
-                    influence += 0.2f;
+                    influence -= 0.5f;
                     break;
                 case "blueNPC":
-                    influence -= 0.2f;
+                    influence += 0.5f;
                     break;
                 default:
                     break;
