@@ -49,7 +49,7 @@ public class CameraFollow : MonoBehaviour
         else
         {
             var zoom = Input.GetAxis("Mouse ScrollWheel");
-            transform.position += Vector3.down * zoom * Time.deltaTime * 500;
+            transform.position += Vector3.down * zoom * Time.deltaTime * 1000;
             if (Input.GetKey(KeyCode.Mouse2))
             {
                 var displacement = Input.mousePosition - previousMousePosition;
