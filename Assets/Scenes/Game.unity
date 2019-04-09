@@ -2805,6 +2805,17 @@ PrefabInstance:
       propertyPath: threatLvl
       value: -5
       objectReference: {fileID: 0}
+    - target: {fileID: 249590048747853179, guid: c7f6dba7be4fe63409ea65979ba53819,
+        type: 3}
+      propertyPath: projectile
+      value: 
+      objectReference: {fileID: 6563708636750609586, guid: a8695c478dc93204eaf99f47e9d8e9a0,
+        type: 3}
+    - target: {fileID: 249590048747853179, guid: c7f6dba7be4fe63409ea65979ba53819,
+        type: 3}
+      propertyPath: attackAnimationDuration
+      value: 0.35
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7f6dba7be4fe63409ea65979ba53819, type: 3}
 --- !u!1 &679105125
@@ -8475,5 +8486,16 @@ PrefabInstance:
       propertyPath: ally
       value: 
       objectReference: {fileID: 1835133725}
+    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
+        type: 3}
+      propertyPath: projectile
+      value: 
+      objectReference: {fileID: 6563708636750609586, guid: a8695c478dc93204eaf99f47e9d8e9a0,
+        type: 3}
+    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
+        type: 3}
+      propertyPath: attackAnimationDuration
+      value: 0.35
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32186590444570a45863d5ba07ed1861, type: 3}

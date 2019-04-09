@@ -11,7 +11,7 @@ public class PathfindingAgent : MonoBehaviour
     [Header("Pathfiding Agent")]
     public float maxLinearVelocity = 3.0f;
     
-    private const float maxAngularVelocity = 30.0f;
+    private const float maxAngularVelocity = 40.0f;
     private const float maxMovementAngle = 90.0f;
     private const float satisfactionRadius = 1.0f;
     private const float timeToTarget = 0.25f;
