@@ -82,6 +82,7 @@ public class PathfindingGraph : MonoBehaviour
     public List<Vector2> ComputePath(
         Vector3 worldPosition,
         Vector3 worldTarget,
+        bool useInfluence,
         bool approximateNode = true)
     {
         Vector2 position = new Vector2(worldPosition.x, worldPosition.z);
@@ -114,7 +115,11 @@ public class PathfindingGraph : MonoBehaviour
 
         open.Add(startNode);
         costSoFar.Add(startNode, 0);
-        estimatedTotalCost.Add(startNode, Heuristic(startNode, endNode));
+        if (useInfluence)
+            estimatedTotalCost.Add(startNode, Heuristic(startNode, endNode) + Influence(startNode));
+        else
+            estimatedTotalCost.Add(startNode, Heuristic(startNode, endNode));
+
 
         // Perform traversal through graph
         Vector2 current = startNode;
@@ -154,7 +159,10 @@ public class PathfindingGraph : MonoBehaviour
                 }
                 connections[neighbor] = current;
                 costSoFar[neighbor] = cost;
-                estimatedTotalCost[neighbor] = cost + Heuristic(neighbor, endNode);
+                if (useInfluence)
+                    estimatedTotalCost[neighbor] = cost + Heuristic(neighbor, endNode) + Influence(neighbor);
+                else
+                    estimatedTotalCost[neighbor] = cost + Heuristic(neighbor, endNode);
             }
         }
 
@@ -243,5 +251,37 @@ public class PathfindingGraph : MonoBehaviour
     private float Heuristic(Vector2 position, Vector2 target)
     {
         return Vector2.Distance(position, target);
+    }
+
+    public float Influence(Vector2 position)
+    {
+        float influence = 0.0f;
+        int layerMask = LayerMask.GetMask("Units"); 
+
+        Collider[] characters = Physics.OverlapSphere(position, 25.0f, layerMask);
+        foreach (Collider col in characters)
+        {
+            switch (col.gameObject.tag)
+            {
+                // move towards Red (allies)
+                // avoid blue (enemies)
+                case "redPlayer":
+                    influence -= 2.5f;
+                    break;
+                case "bluePlayer":
+                    influence += 2.5f;
+                    break;
+                case "redNPC":
+                    influence -= 0.5f;
+                    break;
+                case "blueNPC":
+                    influence += 0.5f;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return influence;
     }
 }

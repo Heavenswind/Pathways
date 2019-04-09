@@ -95,16 +95,16 @@ public class UnitController : PathfindingAgent
         base.Face(position, completionAction);
     }
 
-    public override void Arrive(Vector3 position, float acceptanceRange = 0, Action completionAction = null)
+    public override void Arrive(Vector3 position, bool useInfluence, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated || isAttacking) return;
-        base.Arrive(position, acceptanceRange, completionAction);
+        base.Arrive(position, useInfluence, acceptanceRange, completionAction);
     }
 
-    public override void Chase(Transform target, float acceptanceRange = 0, Action completionAction = null)
+    public override void Chase(Transform target, bool useInfluence, float acceptanceRange = 0, Action completionAction = null)
     {
         if (!activated || isAttacking) return;
-        base.Chase(target, acceptanceRange, completionAction);
+        base.Chase(target, useInfluence, acceptanceRange, completionAction);
     }
 
     // Make the unit fire a projectile toward the target position.
@@ -115,7 +115,7 @@ public class UnitController : PathfindingAgent
     }
 
     // Make the unit attack the target enemy in melee range.
-    public void Attack(UnitController target)
+    public void Attack(UnitController target, bool useInfluence)
     {
         if (!activated || isAttacking) return;
         this.target = target;
@@ -126,7 +126,7 @@ public class UnitController : PathfindingAgent
         }
         else
         {
-            Chase(target.transform, MeleeAttackDistance(), PerformAttack);
+            Chase(target.transform, useInfluence, MeleeAttackDistance(), PerformAttack);
         }
     }
 

@@ -73,12 +73,12 @@ public class PlayerAllyController : UnitController
         if (returnToBase >= Mathf.Max(flee, attack, chase, moveToPoint, stay))
         {
             //Debug.Log("return to base");
-            Arrive(teamBase, 5, Heal);
+            Arrive(teamBase, false, 5, Heal);
         }
         else if (flee >= Mathf.Max(attack, chase, moveToPoint, stay))
         {
             //Debug.Log("flee");
-            Arrive(transform.position + (transform.position - closestEnemy.transform.position).normalized * 3);
+            Arrive(transform.position + (transform.position - closestEnemy.transform.position).normalized * 3, false);
         }
         else if (attack >= Mathf.Max(chase, moveToPoint, stay))
         {
@@ -92,13 +92,13 @@ public class PlayerAllyController : UnitController
             else
             {
                 //Debug.Log("chase to attack");
-                Chase(closestEnemy.transform);
+                Chase(closestEnemy.transform, false);
             }
         }
         else if (chase >= Mathf.Max(moveToPoint, stay))
         {
             //Debug.Log("chase");
-            Chase(closestEnemy.transform);
+            Chase(closestEnemy.transform, false);
         }
         else if (moveToPoint >= stay)
         {
@@ -152,7 +152,7 @@ public class PlayerAllyController : UnitController
     private void SetTargetCapturePoint(int capturePointIndex)
     {
         var capturePoint = capturePoints[capturePointIndex];
-        Arrive(capturePoint.transform.position, capturePointRange, ChooseNextAction);
+        Arrive(capturePoint.transform.position, false, capturePointRange, ChooseNextAction);
     }
 
     // Find the closest enemy with the given targ within the aggression range.

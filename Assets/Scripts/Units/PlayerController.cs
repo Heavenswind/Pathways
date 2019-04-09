@@ -22,7 +22,7 @@ public class PlayerController : UnitController
                 Vector3 targetPosition;
                 if (PlayerTargetPosition(out targetPosition))
                 {
-                    Arrive(targetPosition);
+                    Arrive(targetPosition, false);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Mouse1))
