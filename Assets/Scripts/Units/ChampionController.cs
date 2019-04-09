@@ -31,7 +31,7 @@ public class ChampionController : UnitController
     public ChampionController ally;
 
     //On start, get a reference to all capture points and set a target.
-    new void Start()
+    protected override void Start()
     {
         base.Start();
         capturesPoints = FindObjectsOfType<CapturePoint>();
@@ -39,48 +39,10 @@ public class ChampionController : UnitController
         initialPosition = transform.position;
     }
 
-    void FindEnemy()
-    {
-        //Get the closest enemy to us if we see one.
-        var enemy = FindClosestEnemy();
-        if (enemy != null && enemy != target)
-        {
-            if (Vector3.Distance(enemy.transform.position, transform.position) <= (aggressionRange / 2.0f))
-                Attack(enemy, false);
-            else
-                Fire(enemy.transform.position);
-        }
-    }
-
-    void Fight(UnitController enemy)
-    {
-        if(enemy != null)
-        {
-            if (threatened())
-            {
-                if (Vector3.Distance(enemy.transform.position, transform.position) < (aggressionRange))
-                {
-                    //Kite : needs work
-                    Vector3 position = (enemy.transform.position - transform.position) / 2.0f;
-                    Arrive(-position, true, 0.5f);
-                    Fire(enemy.transform.position);
-
-                }
-            }
-            else
-            {
-                //Melee
-                if (Vector3.Distance(enemy.transform.position, transform.position) <= (aggressionRange / 2.0f))
-                    Attack(enemy, false);
-                //Range
-                else
-                    Fire(enemy.transform.position);
-            }
-        }
-    }
-
     void Update()
     {
+        calculateThreatLevel();
+
         //As long as we are not in danger...
         if (!inDanger())
         {
@@ -107,9 +69,51 @@ public class ChampionController : UnitController
         }
 
     }
-    private void FixedUpdate()
+
+    void FindEnemy()
     {
-        calculateThreatLevel();
+        //Get the closest enemy to us if we see one.
+        var enemy = FindClosestEnemy();
+        if (enemy != null && enemy != target)
+        {
+            if (Vector3.Distance(enemy.transform.position, transform.position) <= (aggressionRange / 2.0f))
+                Attack(enemy, false);
+            else
+                Fire(enemy.transform.position);
+        }
+    }
+
+    void Fight(UnitController enemy)
+    {
+        if(enemy != null)
+        {
+            if (threatened())
+            {
+                if (PathfindingGraph.instance.HasClearPath(transform.position, enemy.transform.position, 0.5f))
+                {
+                    var distance = Vector3.Distance(transform.position, enemy.transform.position);
+                    var timeToTarget = distance / projectile.GetComponent<Projectile>().speed;
+                    Fire(enemy.transform.position + (enemy.velocity * timeToTarget));
+                }
+                else
+                {
+                    Arrive(transform.position + (transform.position - enemy.transform.position).normalized * 3, false);
+                }
+            }
+            else
+            {
+                if (PathfindingGraph.instance.HasClearPath(transform.position, enemy.transform.position, 0.5f))
+                {
+                    var distance = Vector3.Distance(transform.position, enemy.transform.position);
+                    var timeToTarget = distance / projectile.GetComponent<Projectile>().speed;
+                    Fire(enemy.transform.position + (enemy.velocity * timeToTarget));
+                }
+                else
+                {
+                    Attack(enemy, false);
+                }
+            }
+        }
     }
 
     //Returns if its in danger.
@@ -191,11 +195,9 @@ public class ChampionController : UnitController
     public void NeedHelp()
     {
         // If not to far, make ally come to the point and fight with him
-        if (AllyInRange())
+        if (AllyInRange() && hitPoints > 1)
         {
             ally.SetTargetCapturePoint(targetCapturePoint);
-            var enemy = FindClosestEnemy();
-            Fight(enemy);
         }
         // Go to the base to heal.
         else if(IsCritical())
