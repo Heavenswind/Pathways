@@ -61,6 +61,10 @@ public class PathfindingAgent : MonoBehaviour
             {
                 var controller = hit.gameObject.GetComponent<CharacterController>();
                 controller.SimpleMove(new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z));
+                if (Vector3.Angle(transform.forward, -hit.normal) < 10)
+                {
+                    controller.SimpleMove(Vector3.left);
+                }
             }
             else if (tag.EndsWith("NPC"))
             {
