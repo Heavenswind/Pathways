@@ -2873,7 +2873,7 @@ MonoBehaviour:
   blueTower: {fileID: 212696029}
   redTower: {fileID: 529955975}
   scoreToWin: 100
-  scoreRatePerPoint: 0.002
+  scoreRatePerPoint: 0.005
 --- !u!114 &679105128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8426,6 +8426,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy Champion Ally
       objectReference: {fileID: 0}
+    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
+        type: 3}
+      propertyPath: ally
+      value: 
+      objectReference: {fileID: 1835133725}
+    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
+        type: 3}
+      propertyPath: projectile
+      value: 
+      objectReference: {fileID: 6563708636750609586, guid: a8695c478dc93204eaf99f47e9d8e9a0,
+        type: 3}
+    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
+        type: 3}
+      propertyPath: attackAnimationDuration
+      value: 0.35
+      objectReference: {fileID: 0}
     - target: {fileID: 5161424817369384120, guid: 32186590444570a45863d5ba07ed1861,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8480,22 +8496,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
-        type: 3}
-      propertyPath: ally
-      value: 
-      objectReference: {fileID: 1835133725}
-    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
-        type: 3}
-      propertyPath: projectile
-      value: 
-      objectReference: {fileID: 6563708636750609586, guid: a8695c478dc93204eaf99f47e9d8e9a0,
-        type: 3}
-    - target: {fileID: 5362437811092644414, guid: 32186590444570a45863d5ba07ed1861,
-        type: 3}
-      propertyPath: attackAnimationDuration
-      value: 0.35
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32186590444570a45863d5ba07ed1861, type: 3}
