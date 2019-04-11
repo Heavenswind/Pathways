@@ -33,6 +33,13 @@ public class PlayerController : UnitController
                     Fire(targetPosition);
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.F1))
+            {
+                foreach (CharacterController character in Object.FindObjectsOfType<CharacterController>())
+                {
+                    character.SimpleMove(new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)) * 3);
+                }
+            }
         }
 
         // Heal player at base
