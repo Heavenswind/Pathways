@@ -167,6 +167,7 @@ public class UnitController : PathfindingAgent
         instance.GetComponent<Projectile>().target = enemyTeam;
         yield return new WaitForSeconds(waitAfterAttackDuration);
         isAttacking = false;
+        Stop();
     }
 
     // Coroutine which adds a delay to the melee attack to simulate the wind up.
@@ -181,6 +182,7 @@ public class UnitController : PathfindingAgent
         }
         yield return new WaitForSeconds(waitAfterAttackDuration);
         isAttacking = false;
+        Stop();
     }
 
     // Make the unit respawn after the given delay.

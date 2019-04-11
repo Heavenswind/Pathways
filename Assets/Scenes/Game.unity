@@ -2873,7 +2873,7 @@ MonoBehaviour:
   blueTower: {fileID: 212696029}
   redTower: {fileID: 529955975}
   scoreToWin: 100
-  scoreRatePerPoint: 0.005
+  scoreRatePerPoint: 0.01
 --- !u!114 &679105128
 MonoBehaviour:
   m_ObjectHideFlags: 0

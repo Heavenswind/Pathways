@@ -20,6 +20,7 @@ public class ChampionController : UnitController
 
     //Initial position
     Vector3 initialPosition;
+    Vector3 basePosition;
 
     //Range distances
     private float aggressionRange = 8;
@@ -37,6 +38,7 @@ public class ChampionController : UnitController
         capturesPoints = FindObjectsOfType<CapturePoint>();
         targetCapturePoint = getClosestCapturePointOfInterest();
         initialPosition = transform.position;
+        basePosition = GameObject.FindWithTag("redBase").transform.position;
     }
 
     void Update()
@@ -51,15 +53,15 @@ public class ChampionController : UnitController
             {
                 Fight(enemy);
             }
-            //else If im not moving and either im not in range of my target or the target point is captured, go to the capture point
-            else if (isStill && (!InRangeOfPoint() || TargetPointIsCaptured()))
-            {
-                SetTargetCapturePoint(targetCapturePoint);
-            }
             //else if im in range and the target point is captured, get a new capture point.
             else if (InRangeOfPoint() && TargetPointIsCaptured())
             {
                 targetCapturePoint = getClosestCapturePointOfInterest();
+                SetTargetCapturePoint(targetCapturePoint);
+            }
+            //else if im not moving and either im not in range of my target or the target point is captured, go to the capture point
+            else if (isStill && !InRangeOfPoint())
+            {
                 SetTargetCapturePoint(targetCapturePoint);
             }
         }
@@ -67,7 +69,6 @@ public class ChampionController : UnitController
         {
             NeedHelp();
         }
-
     }
 
     void FindEnemy()
@@ -195,18 +196,23 @@ public class ChampionController : UnitController
     public void NeedHelp()
     {
         // If not to far, make ally come to the point and fight with him
-        if (AllyInRange() && hitPoints > 1)
+        var enemy = FindClosestEnemy();
+        if (enemy != null && AllyInRange() && hitPoints > 1)
         {
             ally.SetTargetCapturePoint(targetCapturePoint);
+            if (enemy != null && enemy != target)
+            {
+                Fight(enemy);
+            }
+            else
+            {
+                Arrive(basePosition, true, capturePointRange, Heal);
+            }
         }
         // Go to the base to heal.
         else if(IsCritical())
         {
-            Arrive(initialPosition, true, capturePointRange);
-            if (Vector3.Distance(transform.position, initialPosition) <= 1)
-            {
-                hitPoints = totalHitPoints;
-            }
+            Arrive(basePosition, true, capturePointRange, Heal);
         }
     }
 

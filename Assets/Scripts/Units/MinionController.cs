@@ -19,13 +19,13 @@ public class MinionController : UnitController
         {
             Attack(enemy, false);
         }
-        else if (isStill && !InRangeOfPoint())
-        {
-            SetTargetCapturePoint(targetCapturePoint);
-        }
         else if (InRangeOfPoint() && TargetPointIsCaptured())
         {
             SetTargetCapturePoint(manager.transitions[targetCapturePoint]);
+        }
+        else if (isStill && !InRangeOfPoint())
+        {
+            SetTargetCapturePoint(targetCapturePoint);
         }
     }
 
