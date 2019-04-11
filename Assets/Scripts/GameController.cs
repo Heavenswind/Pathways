@@ -32,6 +32,12 @@ public class GameController : MonoBehaviour
         capturePoints = GameObject.FindObjectsOfType<CapturePoint>();
     }
 
+    void Start()
+    {
+        gameEnded = false;
+        SpawnManager.spawning = true;
+    }
+
     void Update()
     {
         if (gameEnded) return;
