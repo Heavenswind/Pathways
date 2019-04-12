@@ -30,6 +30,7 @@ public class ChampionController : UnitController
 
     //Ally gameobject reference
     public ChampionController ally;
+    public bool isFighting = false;
 
     //On start, get a reference to all capture points and set a target.
     protected override void Start()
@@ -58,11 +59,13 @@ public class ChampionController : UnitController
             {
                 targetCapturePoint = getClosestCapturePointOfInterest();
                 SetTargetCapturePoint(targetCapturePoint);
+                isFighting = false;
             }
             //else if im not moving and either im not in range of my target or the target point is captured, go to the capture point
             else if (isStill && !InRangeOfPoint())
             {
                 SetTargetCapturePoint(targetCapturePoint);
+                isFighting = false;
             }
         }
         else
@@ -86,6 +89,8 @@ public class ChampionController : UnitController
 
     void Fight(UnitController enemy)
     {
+        isFighting = true;
+
         if(enemy != null)
         {
             if (threatened())
@@ -96,9 +101,13 @@ public class ChampionController : UnitController
                     var timeToTarget = distance / projectile.GetComponent<Projectile>().speed;
                     Fire(enemy.transform.position + (enemy.velocity * timeToTarget));
                 }
-                else
+                else if (AllyInRange() && ally.isFighting)
                 {
                     Arrive(transform.position + (transform.position - enemy.transform.position).normalized * 3, false);
+                }
+                else
+                {
+                    Arrive(transform.position + (transform.position - enemy.transform.position - ally.transform.position).normalized * 3, false);
                 }
             }
             else
@@ -135,6 +144,7 @@ public class ChampionController : UnitController
         //print(gameObject.name + " feels threatened");
         return threatLvl >= dangerLevel || hitPoints <= (totalHitPoints / 2.0f);
     }
+
     //Returns whether the ally is in range to collaborate.
     bool AllyInRange()
     {
@@ -207,12 +217,14 @@ public class ChampionController : UnitController
             else
             {
                 Arrive(basePosition, true, capturePointRange, Heal);
+                isFighting = false;
             }
         }
         // Go to the base to heal.
         else if(IsCritical())
         {
             Arrive(basePosition, true, capturePointRange, Heal);
+            isFighting = false;
         }
     }
 
