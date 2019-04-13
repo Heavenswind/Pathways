@@ -30,3 +30,4 @@ The following assets were imported from the Unity asset store:
 
 The following assets were imported from external sources:
 * [Halo by Fenotype](https://www.1001fonts.com/halo-font.html) for the UI font
+* Assets from [Mixamo](https://www.mixamo.com/#/) for the character models and animations
