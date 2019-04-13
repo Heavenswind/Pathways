@@ -103,11 +103,12 @@ public class ChampionController : UnitController
                 }
                 else if (AllyInRange() && ally.isFighting)
                 {
-                    Arrive(transform.position + (transform.position - enemy.transform.position).normalized * 3, false);
+                    Vector3 newDirection = enemy.transform.position + (enemy.transform.position - ally.transform.position);
+                    Arrive(transform.position + (newDirection - transform.position).normalized * 3, false);
                 }
                 else
                 {
-                    Arrive(transform.position + (transform.position - enemy.transform.position - ally.transform.position).normalized * 3, false);
+                    Arrive(transform.position + (transform.position - enemy.transform.position).normalized * 3, false);
                 }
             }
             else
